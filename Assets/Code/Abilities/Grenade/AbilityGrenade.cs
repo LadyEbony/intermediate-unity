@@ -20,7 +20,7 @@ public class AbilityGrenade : Ability
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0)) { //left mouse button
+        if (Input.GetMouseButtonDown(1)) { // Omar - changed to right mouse button
             //Debug.Log("Button press detected");
             Activate();
         }

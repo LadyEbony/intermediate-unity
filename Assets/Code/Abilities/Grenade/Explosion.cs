@@ -7,20 +7,13 @@ public class Explosion : MonoBehaviour
     public  float     detonationTime;
     public  float     explosionRadius;
     public  LayerMask explosionLayer;
-    
-    public  GameObject debris; //needs layer value "Debris" and the debris object must have a rigidbody and collider
-    
+    public GameObject explostionEffect;
+
     private float timeElapsed;
     
+
     public void Explode() {
         Debug.Log("ドッカーン");
-        
-        //spawn debris
-        for (int i = 0; i < 10; ++i) {
-            //Debug.Log("generated debris");
-            GameObject newDebris = Instantiate(debris, transform.position, transform.rotation);
-            newDebris.SetActive(true);
-        }
         
         //destroy everything in the radius and destroy this object
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, explosionRadius, explosionLayer);
@@ -28,6 +21,10 @@ public class Explosion : MonoBehaviour
             Destroy(hitColliders[i].gameObject);
         }
         Destroy(gameObject);
+
+        // particles
+        var eft = Instantiate(explostionEffect, transform.position, Quaternion.identity);
+        Destroy(eft, 2f);
     }
     
     // Start is called before the first frame update
