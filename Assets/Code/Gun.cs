@@ -43,7 +43,7 @@ public class Gun : MonoBehaviour {
     void Shoot(Vector3 direction)
     {
         Transform bulletClone = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation).transform;
-        bulletClone.Translate(bulletSpeed * direction * Time.deltaTime);
+        //bulletClone.Translate(bulletSpeed * direction * Time.deltaTime);
 
         Destroy(bulletClone.gameObject, bulletDestroyTime);
     }
