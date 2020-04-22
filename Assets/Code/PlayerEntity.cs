@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class PlayerEntity : MonoBehaviour
 {
     [Header("Rotation")]
     public float clampAngle = 80f;
