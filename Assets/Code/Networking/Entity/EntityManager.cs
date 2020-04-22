@@ -85,7 +85,6 @@ namespace EntityNetwork {
 		/// </summary>
 		/// <remarks>Registering an entity validates all existing entities and will unsubcribe dead entities.</remarks>
 		public static void Register(EntityBase eb) {
-      Debug.Log("a");
 			CleanEntities();
 
           //Debug.LogFormat("Registered Entity {0} : {1}",eb.name,eb.EntityID);

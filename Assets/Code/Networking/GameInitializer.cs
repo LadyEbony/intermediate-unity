@@ -12,6 +12,7 @@ public class GameInitializer : MonoBehaviour {
   public GameObject playerPrefab;
   public GameObject aiPrefab;
   public GameObject bulletPrefab;
+  public GameObject grenadePrefab;
 
   private void Awake() {
     Instance = this;

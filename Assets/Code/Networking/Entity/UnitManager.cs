@@ -44,6 +44,8 @@ public class UnitManager : EntityBase, IMasterOwnsUnclaimed {
       var value = t.ToString().GetStableHashCode();
       // and get the method info
       var method = t.GetMethod("CreateEntity", BindingFlags.Public | BindingFlags.Static);
+      Debug.Log(value);
+      Debug.Log(method);
       typeConversion.Add(t, value);
       createConversion.Add(value, method);
     }

@@ -8,13 +8,14 @@ public class AbilityGrenade : Ability
     public float speed;
     
     public override void Activate() {
-        //Debug.Log("Grenade abiltity activated");
-        GameObject newGrenade = Instantiate(grenade, transform.position, transform.rotation);
-        newGrenade.SetActive(true);
-        
-        //Make the new object move in direction the mouse is pointing
+        var newGrenade = Explosion.CreateEntity() as Explosion;
+
+        newGrenade.transform.position = transform.position;
+
         var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        newGrenade.GetComponent<Rigidbody>().velocity = new Vector3(ray.direction.x * speed, ray.direction.y * speed, ray.direction.z * speed);
+        newGrenade.rb.velocity = new Vector3(ray.direction.x * speed, ray.direction.y * speed, ray.direction.z * speed);
+
+        UnitManager.Local.Register(newGrenade);
     }
 
     // Update is called once per frame
