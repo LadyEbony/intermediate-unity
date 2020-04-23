@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerEntity : MonoBehaviour
+public class PlayerEntity : EntityUnit
 {
     [Header("Rotation")]
     public float clampAngle = 80f;
@@ -14,35 +14,91 @@ public class PlayerEntity : MonoBehaviour
     private Transform t;
 
     public float speed = 10;
+    public float gravity = -10f;
+    public float jumpHeight = 3f;
 
-    private void Start()
+    public float jumpvelocity;
+
+    [Header("Network")]
+    public Vector3 basePosition;
+    public Vector3 nextPosition;
+    public float baseUpdateTime;
+
+    public new static EntityUnit CreateEntity()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-
-        t = transform;
-
-        var rot = transform.localRotation.eulerAngles;
-        rotX = rot.x;
-        rotY = rot.y;
+        return SetEntityHelper(GameInitializer.Instance.playerPrefab);
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void StartEntity()
     {
-        var horizontal = -Input.GetAxis("Mouse Y");
-        var vertical = Input.GetAxis("Mouse X");
+        base.StartEntity();
 
-        rotX += horizontal * yawSensitivity * Time.deltaTime;
-        rotY += vertical * pitchSensitivity * Time.deltaTime;
+        if (isMine)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
 
-        rotX = Mathf.Clamp(rotX, -clampAngle, clampAngle);
-        var rot = Quaternion.Euler(rotX, rotY, 0f);
-        t.rotation = rot;
+            t = transform;
 
-        var delta = GetDirectionInput;
+            var rot = transform.localRotation.eulerAngles;
+            rotX = rot.x;
+            rotY = rot.y;
+        }
+        else
+        {
+            var camera = GetComponentInChildren<Camera>();
+            Destroy(camera.gameObject);
+        }
+    }
 
-        Vector3 movement = delta * speed * Time.deltaTime;
-        transform.position += (movement);
+
+    public override void UpdateEntity()
+    {
+        base.UpdateEntity();
+        if (isMine)
+        {
+            var horizontal = -Input.GetAxis("Mouse Y");
+            var vertical = Input.GetAxis("Mouse X");
+
+            rotX += horizontal * yawSensitivity * Time.deltaTime;
+            rotY += vertical * pitchSensitivity * Time.deltaTime;
+
+            rotX = Mathf.Clamp(rotX, -clampAngle, clampAngle);
+            var rot = Quaternion.Euler(rotX, rotY, 0f);
+            t.rotation = rot;
+            
+            var delta = GetDirectionInput;
+
+            Vector3 movement = delta * speed * Time.deltaTime;
+            
+
+            //if the person presses jump, the person must be on the ground in order to jump
+
+            if (Input.GetButtonDown("Jump"))
+            {
+                jumpvelocity = 5f;
+            }
+
+            Vector3 position = transform.position;
+            if (position.y > 0)
+            {
+                jumpvelocity = -10 * Time.deltaTime;
+            }
+            else
+            {
+                position.y = 0;
+                jumpvelocity = 0;
+                transform.position = position;
+            }
+
+            movement.y = (jumpvelocity * Time.deltaTime);
+            transform.position += (movement);
+        }
+        else
+        {
+            var t = (Time.time - baseUpdateTime) / (updateTimer * 1.5f);
+            transform.position = Vector3.Lerp(basePosition, nextPosition, t);
+
+        }
     }
 
     public Vector3 GetDirectionInput
@@ -71,6 +127,26 @@ public class PlayerEntity : MonoBehaviour
             if (delta != Vector3.zero) delta = delta.normalized;
 
             return delta;
+        }
+    }
+
+    public override void Serialize(ExitGames.Client.Photon.Hashtable h)
+    {
+        base.Serialize(h);
+
+        h.Add('p', transform.position);
+    }
+
+    public override void Deserialize(ExitGames.Client.Photon.Hashtable h)
+    {
+        base.Deserialize(h);
+
+        object val;
+        if (h.TryGetValue('p', out val))
+        {
+            basePosition = transform.position;
+            nextPosition = (Vector3)val;
+            baseUpdateTime = Time.time;
         }
     }
 
