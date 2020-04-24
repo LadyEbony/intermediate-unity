@@ -10,6 +10,7 @@ public class GameInitializer : MonoBehaviour {
 
   public Dictionary<int, UnitManager> managers;
   public GameObject playerPrefab;
+  public GameObject gunPrefab;
   public GameObject aiPrefab;
   public GameObject bulletPrefab;
   public GameObject grenadePrefab;
@@ -71,6 +72,9 @@ public class GameInitializer : MonoBehaviour {
   // KEVIN: This is called when my player enters gameplay
   public void ModifyLocalManager(UnitManager manager) {
 		UnitManager.Local = manager;
+
+        var player = PlayerEntity.CreateEntity();
+        manager.Register(player);
 
 	}
 
