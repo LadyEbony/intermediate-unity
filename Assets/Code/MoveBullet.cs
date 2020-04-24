@@ -2,37 +2,72 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveBullet : MonoBehaviour
+public class MoveBullet : EntityUnit
 {
     public Transform Gun;
 
-    float moveSpeed;
+    public float moveSpeed;
+    public float timer;
 
-    private void Awake()
+    public new static EntityUnit CreateEntity()
     {
-        Gun = GameObject.Find("Gun").transform;
+        return SetEntityHelper(GameInitializer.Instance.bulletPrefab);
+    }
+
+    public override void AwakeEntity()
+    {
+        base.AwakeEntity();
     }
 
     // Start is called before the first frame update
-    void Start()
+    public override void StartEntity()
     {
-        if(Gun == null)
-        {
-            Debug.LogError("MoveBullet: No gun is found");
-        }
-        if(Gun.GetComponent<Gun>() != null)
-        {
-            moveSpeed = Gun.GetComponent<Gun>().bulletSpeed;
-        }
+        base.StartEntity();
+
+        timer = 5f;
+
+        StartCoroutine(Timer());
     }
 
     // Update is called once per frame
-    void Update()
+    public override void UpdateEntity()
     {
         //deal with bullet movement
         Move();
         //deal with bullet effect
         Effect();
+    }
+
+    public override void Serialize(ExitGames.Client.Photon.Hashtable h)
+    {
+        base.Serialize(h);
+
+        h.Add('s', transform.position);
+
+        h.Add('r', transform.rotation);
+
+        h.Add('f', moveSpeed);
+    }
+
+    public override void Deserialize(ExitGames.Client.Photon.Hashtable h)
+    {
+        base.Deserialize(h);
+
+        object val;
+        if (h.TryGetValue('s', out val))
+        {
+            transform.position = (Vector3)val;
+        }
+
+        if (h.TryGetValue('r', out val))
+        {
+            transform.rotation = (Quaternion)val;
+        }
+
+        if (h.TryGetValue('f', out val))
+        {
+            moveSpeed = (float)val;
+        }
     }
 
     void Move()
@@ -43,5 +78,14 @@ public class MoveBullet : MonoBehaviour
     void Effect()
     {
 
+    }
+
+    IEnumerator Timer()
+    {
+        yield return new WaitForSeconds(timer);
+
+        UnitManager.Local.Deregister(this);
+        DestroyEntity();
+        Destroy(gameObject);
     }
 }

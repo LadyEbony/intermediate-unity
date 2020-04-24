@@ -8,9 +8,9 @@ public class Gun : MonoBehaviour {
 
     public float bulletSpeed = 10f;
     public float fireRate = 1f;
-    public float bulletDestroyTime = 5f;
 
     private float timeToFire = 0f;
+    private bool found = false;
 
     // Start is called before the first frame update
     void Start() {
@@ -24,9 +24,53 @@ public class Gun : MonoBehaviour {
         }
     }
 
+<<<<<<< Updated upstream
   // Update is called once per frame
     void Update() {
         HandleMouse();
+=======
+    // Update is called once per frame
+    public override void UpdateEntity() {
+        if (!found)
+        {
+            PlayerEntity player;
+            if (UnitManager.Local.players.TryGetValue(authorityID, out player))
+            {
+                transform.parent = player.transform.Find("Hand");
+                transform.localPosition = Vector3.zero;
+
+                found = true;
+            }
+        }
+
+        if (isMine){
+          HandleMouse();
+
+          if (Input.GetMouseButton(0) && Time.time >= timeToFire)
+          {
+              Shoot();
+              timeToFire = Time.time + 1 / fireRate;
+          }
+        }
+    }
+
+    public override void Serialize(ExitGames.Client.Photon.Hashtable h)
+    {
+        base.Serialize(h);
+
+        h.Add('r', transform.rotation);
+    }
+
+    public override void Deserialize(ExitGames.Client.Photon.Hashtable h)
+    {
+        base.Deserialize(h);
+
+        object val;
+        if(h.TryGetValue('r',out val))
+        {
+            transform.rotation = (Quaternion)val;
+        }
+>>>>>>> Stashed changes
     }
 
     void HandleMouse(){
@@ -42,9 +86,17 @@ public class Gun : MonoBehaviour {
 
     void Shoot(Vector3 direction)
     {
+<<<<<<< Updated upstream
         Transform bulletClone = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation).transform;
         //bulletClone.Translate(bulletSpeed * direction * Time.deltaTime);
+=======
+        var entity = MoveBullet.CreateEntity() as MoveBullet;
 
-        Destroy(bulletClone.gameObject, bulletDestroyTime);
+        entity.transform.position = firePoint.position;
+        entity.transform.rotation = firePoint.rotation;
+        entity.moveSpeed = bulletSpeed;
+>>>>>>> Stashed changes
+
+        UnitManager.Local.Register(entity);
     }
 }
