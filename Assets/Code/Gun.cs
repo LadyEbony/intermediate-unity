@@ -8,9 +8,9 @@ public class Gun : EntityUnit {
 
     public float bulletSpeed = 10f;
     public float fireRate = 1f;
-    public float bulletDestroyTime = 5f;
 
     private float timeToFire = 0f;
+    private bool found = false;
 
     public new static EntityUnit CreateEntity(){
       return SetEntityHelper(GameInitializer.Instance.gunPrefab);
@@ -38,9 +38,21 @@ public class Gun : EntityUnit {
             Debug.LogError("Gun: No Fire Point is found");
         }
     }
-
+  
     // Update is called once per frame
     public override void UpdateEntity() {
+        if (!found)
+        {
+            PlayerEntity player;
+            if (UnitManager.Local.players.TryGetValue(authorityID, out player))
+            {
+                transform.parent = player.transform.Find("Hand");
+                transform.localPosition = Vector3.zero;
+
+                found = true;
+            }
+        }
+
         if (isMine){
           HandleMouse();
 
@@ -77,9 +89,12 @@ public class Gun : EntityUnit {
 
     void Shoot()
     {
-        Transform bulletClone = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation).transform;
-        bulletClone.parent = transform;
+        var entity = MoveBullet.CreateEntity() as MoveBullet;
 
-        Destroy(bulletClone.gameObject, bulletDestroyTime);
+        entity.transform.position = firePoint.position;
+        entity.transform.rotation = firePoint.rotation;
+        entity.moveSpeed = bulletSpeed;
+
+        UnitManager.Local.Register(entity);
     }
 }
