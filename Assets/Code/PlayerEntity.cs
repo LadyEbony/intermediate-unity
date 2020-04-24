@@ -33,6 +33,8 @@ public class PlayerEntity : EntityUnit
     {
         base.StartEntity();
 
+        UnitManager.Local.players.Add(authorityID, this);
+
         if (isMine)
         {
             Cursor.lockState = CursorLockMode.Locked;
@@ -42,6 +44,9 @@ public class PlayerEntity : EntityUnit
             var rot = transform.localRotation.eulerAngles;
             rotX = rot.x;
             rotY = rot.y;
+
+            var gun = Gun.CreateEntity();
+            UnitManager.Local.Register(gun);
         }
         else
         {

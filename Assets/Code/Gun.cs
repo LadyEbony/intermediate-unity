@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Gun : MonoBehaviour {
+public class Gun : EntityUnit {
     public GameObject bulletPrefab;
     public Transform firePoint;
 
@@ -12,8 +12,23 @@ public class Gun : MonoBehaviour {
 
     private float timeToFire = 0f;
 
+    public new static EntityUnit CreateEntity(){
+      return SetEntityHelper(GameInitializer.Instance.gunPrefab);
+    }
+
+    public override void AwakeEntity()
+    {
+        base.AwakeEntity();
+    }
+
     // Start is called before the first frame update
-    void Start() {
+    public override void StartEntity()
+    {
+      // moves gun to hand
+      var playerOwner = UnitManager.Local.players[authorityID];
+      transform.parent = playerOwner.transform.Find("Hand");
+      transform.localPosition = Vector3.zero;
+
         if(bulletPrefab == null)
         {
             Debug.LogError("Gun: No bullet is attached!");
@@ -24,26 +39,46 @@ public class Gun : MonoBehaviour {
         }
     }
 
-  // Update is called once per frame
-    void Update() {
-        HandleMouse();
+    // Update is called once per frame
+    public override void UpdateEntity() {
+        if (isMine){
+          HandleMouse();
+
+          if (Input.GetMouseButton(0) && Time.time >= timeToFire)
+          {
+              Shoot();
+              timeToFire = Time.time + 1 / fireRate;
+          }
+        }
+    }
+
+    public override void Serialize(ExitGames.Client.Photon.Hashtable h)
+    {
+        base.Serialize(h);
+
+        h.Add('r', transform.rotation);
+    }
+
+    public override void Deserialize(ExitGames.Client.Photon.Hashtable h)
+    {
+        base.Deserialize(h);
+
+        object val;
+        if(h.TryGetValue('r',out val))
+        {
+            transform.rotation = (Quaternion)val;
+        }
     }
 
     void HandleMouse(){
         var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         transform.rotation = Quaternion.LookRotation(ray.direction, Vector3.up);
-
-        if (Input.GetMouseButton(0) && Time.time >= timeToFire)
-        {
-            Shoot(ray.direction);
-            timeToFire = Time.time + 1 / fireRate;
-        }
     }
 
-    void Shoot(Vector3 direction)
+    void Shoot()
     {
         Transform bulletClone = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation).transform;
-        //bulletClone.Translate(bulletSpeed * direction * Time.deltaTime);
+        bulletClone.parent = transform;
 
         Destroy(bulletClone.gameObject, bulletDestroyTime);
     }
