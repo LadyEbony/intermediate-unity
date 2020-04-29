@@ -143,7 +143,7 @@ public class PlayerEntity : EntityUnit
         }
     }
 
-    public Vector3 GetDirectionInput
+    public static Vector3 GetDirectionInput
     {
         get
         {

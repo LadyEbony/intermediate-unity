@@ -30,6 +30,22 @@ Transform:
   m_Father: {fileID: 5509306154181255396}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2174700066304068318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2570564876849282095}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adb68465d16b374408bc8987caf92c68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blink: 5
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!1 &5509306152405975662
 GameObject:
   m_ObjectHideFlags: 0
@@ -171,9 +187,11 @@ MonoBehaviour:
   clampAngle: 80
   yawSensitivity: 100
   pitchSensitivity: 100
+  baseUpdateTime: 0
   basePosition: {x: 0, y: 0, z: 0}
   nextPosition: {x: 0, y: 0, z: 0}
-  baseUpdateTime: 0
+  baseRotation: {x: 0, y: 0, z: 0, w: 0}
+  nextRotation: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1001 &891621419
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -241,8 +259,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: Gun
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2570564877065612289, guid: 642880ed3bc629249b12dcd2bc9191e7, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 642880ed3bc629249b12dcd2bc9191e7, type: 3}
+--- !u!1 &2570564876849282095 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2570564877065612292, guid: 642880ed3bc629249b12dcd2bc9191e7,
+    type: 3}
+  m_PrefabInstance: {fileID: 891621419}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2570564876849282089 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2570564877065612290, guid: 642880ed3bc629249b12dcd2bc9191e7,
@@ -255,7 +280,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 891621419}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 2570564876849282095}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6568dabdcfa5bdc469823bf6a559f527, type: 3}

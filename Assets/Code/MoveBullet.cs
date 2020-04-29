@@ -23,7 +23,8 @@ public class MoveBullet : EntityUnit
 
         // destroy bullet after X amount of time
         // now includes a parameter :D
-        StartCoroutine(Timer(timer));
+        if (isMine)
+          StartCoroutine(Timer(timer));
     }
 
     // Called once every frame
