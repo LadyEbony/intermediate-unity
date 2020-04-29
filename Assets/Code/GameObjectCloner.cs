@@ -12,7 +12,7 @@ public class GameObjectCloner : MonoBehaviour {
   void Start() {
     var b = target.transform.position;
     for(var i = 0; i < count; ++i){
-      Instantiate(target, b + Random.insideUnitSphere * range, Quaternion.identity);
+      Instantiate(target, b + Random.insideUnitSphere * range, Quaternion.identity, transform);
     }
   }
 }

@@ -248,7 +248,8 @@ MonoBehaviour:
   gunPrefab: {fileID: 2570564877065612292, guid: 642880ed3bc629249b12dcd2bc9191e7,
     type: 3}
   aiPrefab: {fileID: 0}
-  bulletPrefab: {fileID: 0}
+  bulletPrefab: {fileID: 1304642991259110217, guid: 739ea3e36af8b0f43b0a88e09e8d10cb,
+    type: 3}
   grenadePrefab: {fileID: 248332740965947261, guid: e5ec8eb38de600f4f89b20c9605a8fea,
     type: 3}
 --- !u!4 &1259918321

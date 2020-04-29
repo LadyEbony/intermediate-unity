@@ -106,4 +106,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2551fe20875c21c4dab9f31bd093389e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Gun: {fileID: 0}
+  entityID: 0
+  authorityID: 0
+  updateTimer: 0.1
+  moveSpeed: 0
+  timer: 2

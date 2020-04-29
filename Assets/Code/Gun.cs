@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Gun : EntityUnit {
-    public GameObject bulletPrefab;
+public class Gun : MonoBehaviour {
     public Transform firePoint;
 
     public float bulletSpeed = 10f;
@@ -12,76 +11,26 @@ public class Gun : EntityUnit {
     private float timeToFire = 0f;
     private bool found = false;
 
-    public new static EntityUnit CreateEntity(){
-      return SetEntityHelper(GameInitializer.Instance.gunPrefab);
+    void Start() {
+      if(firePoint == null) {
+        Debug.LogError("Gun: No Fire Point is found");
+      }
     }
 
-    public override void AwakeEntity()
-    {
-        base.AwakeEntity();
+    // Previously, the gun was independent of player entity
+    // No longer the case. The player entity handles the gun
+    // As a result, gun does not have to be a networked entity (player entity does all that!)
+    public void HandleGun(){
+      //HandleMouse();
+
+      if (Input.GetMouseButton(0) && Time.time >= timeToFire)
+      {
+        Shoot();
+        timeToFire = Time.time + 1 / fireRate;
+      }
     }
 
-    // Start is called before the first frame update
-    public override void StartEntity()
-    {
-      // moves gun to hand
-      var playerOwner = UnitManager.Local.players[authorityID];
-      transform.parent = playerOwner.transform.Find("Hand");
-      transform.localPosition = Vector3.zero;
-
-        if(bulletPrefab == null)
-        {
-            Debug.LogError("Gun: No bullet is attached!");
-        }
-        if(firePoint == null)
-        {
-            Debug.LogError("Gun: No Fire Point is found");
-        }
-    }
-  
-    // Update is called once per frame
-    public override void UpdateEntity() {
-        if (!found)
-        {
-            PlayerEntity player;
-            if (UnitManager.Local.players.TryGetValue(authorityID, out player))
-            {
-                transform.parent = player.transform.Find("Hand");
-                transform.localPosition = Vector3.zero;
-
-                found = true;
-            }
-        }
-
-        if (isMine){
-          HandleMouse();
-
-          if (Input.GetMouseButton(0) && Time.time >= timeToFire)
-          {
-              Shoot();
-              timeToFire = Time.time + 1 / fireRate;
-          }
-        }
-    }
-
-    public override void Serialize(ExitGames.Client.Photon.Hashtable h)
-    {
-        base.Serialize(h);
-
-        h.Add('r', transform.rotation);
-    }
-
-    public override void Deserialize(ExitGames.Client.Photon.Hashtable h)
-    {
-        base.Deserialize(h);
-
-        object val;
-        if(h.TryGetValue('r',out val))
-        {
-            transform.rotation = (Quaternion)val;
-        }
-    }
-
+    // This function could come in use in the future
     void HandleMouse(){
         var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         transform.rotation = Quaternion.LookRotation(ray.direction, Vector3.up);
@@ -89,12 +38,16 @@ public class Gun : EntityUnit {
 
     void Shoot()
     {
+        // Create bullet
+        // This looks overcomplicated. But this is exactly how UnitManager does it
         var entity = MoveBullet.CreateEntity() as MoveBullet;
 
+        // Insert data into bullet
         entity.transform.position = firePoint.position;
         entity.transform.rotation = firePoint.rotation;
         entity.moveSpeed = bulletSpeed;
 
+        // Register bullet so it can appear on other people's clients
         UnitManager.Local.Register(entity);
     }
 }

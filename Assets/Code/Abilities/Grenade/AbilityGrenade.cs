@@ -8,22 +8,18 @@ public class AbilityGrenade : Ability
     public float speed;
     
     public override void Activate() {
+        // Create explosion
+        // This looks overcomplicated. But this is exactly how UnitManager does it
         var newGrenade = Explosion.CreateEntity() as Explosion;
-
+        
+        // Insert data into explosion
         newGrenade.transform.position = transform.position;
 
         var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         newGrenade.rb.velocity = new Vector3(ray.direction.x * speed, ray.direction.y * speed, ray.direction.z * speed);
 
+        // Register explosion so it can appear on other people's clients
         UnitManager.Local.Register(newGrenade);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetMouseButtonDown(1)) { // Omar - changed to right mouse button
-            //Debug.Log("Button press detected");
-            Activate();
-        }
-    }
 }

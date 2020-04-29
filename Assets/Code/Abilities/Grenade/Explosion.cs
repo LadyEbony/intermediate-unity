@@ -13,23 +13,29 @@ public class Explosion : EntityUnit {
   public GameObject explostionEffect;
 
   private float timeElapsed;
-    
+
+  // Necessary function
+  // Creates an empty explosion prefab to place YOUR or OTHER'S data in
+  // Requires the exact same header
   public new static EntityUnit CreateEntity(){
     return SetEntityHelper(GameInitializer.Instance.grenadePrefab);
   }
 
+  // Called once before StartEntity() and Deserialize()
   public override void AwakeEntity() {
     base.AwakeEntity();
 
     rb = GetComponent<Rigidbody>();
   }
 
+  // Called once before UpdateEntity()
   public override void StartEntity() {
     base.StartEntity();
 
     timeElapsed = 0;
   }
 
+  // Called once every frame
   public override void UpdateEntity() {
     base.UpdateEntity();
 
@@ -39,19 +45,22 @@ public class Explosion : EntityUnit {
     }
   }
 
-  // local client
+  // Only called on the local client
   public override void Serialize(ExitGames.Client.Photon.Hashtable h) {
     base.Serialize(h);
 
+    // Add transform.position and rb.velocity into network message with the keys 's' and 'v'
     h.Add('p', transform.position);
     h.Add('v', rb.velocity);
   }
 
-  // all other clients
+  // Only called on others' clients
   public override void Deserialize(ExitGames.Client.Photon.Hashtable h) {
     base.Deserialize(h);
 
     object val;
+
+    // Accessing the data we previously stored in Serialize
     if (h.TryGetValue('p', out val)){
       transform.position = (Vector3)val;
     }
@@ -68,9 +77,11 @@ public class Explosion : EntityUnit {
         Destroy(hitColliders[i].gameObject);
     }
       
-    UnitManager.Local.Deregister(this);
-    if (isMine)
+    // Deregister explosion so it can STOP appearing on other people's clients
+    if (isMine){
+      UnitManager.Local.Deregister(this);
       Destroy(gameObject);
+    }
 
     // particles
     var eft = Instantiate(explostionEffect, transform.position, Quaternion.identity);
