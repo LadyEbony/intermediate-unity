@@ -9,7 +9,6 @@ public class Gun : MonoBehaviour {
     public float fireRate = 1f;
 
     private float timeToFire = 0f;
-    private bool found = false;
 
     void Start() {
       if(firePoint == null) {
@@ -43,9 +42,9 @@ public class Gun : MonoBehaviour {
         var entity = MoveBullet.CreateEntity() as MoveBullet;
 
         // Insert data into bullet
-        entity.transform.position = firePoint.position;
-        entity.transform.rotation = firePoint.rotation;
+        entity.trans = firePoint;
         entity.moveSpeed = bulletSpeed;
+        entity.direction = Vector3.forward;
 
         // Register bullet so it can appear on other people's clients
         UnitManager.Local.Register(entity);
