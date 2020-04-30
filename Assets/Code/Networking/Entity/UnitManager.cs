@@ -12,7 +12,7 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 public class UnitManager : EntityBase, IMasterOwnsUnclaimed {
 
   public Dictionary<int, EntityUnit> entities;
-  public Dictionary<int, PlayerEntity> players;
+  private Dictionary<int, PlayerEntity> players;
 
   public GameObject platePrefab;
 
@@ -169,6 +169,19 @@ public class UnitManager : EntityBase, IMasterOwnsUnclaimed {
       obj.SetActive(false);
       Destroy(obj, 1f);
     }
+  }
+
+  public void AddPlayerEntity(PlayerEntity player){
+    players.Add(player.authorityID, player);
+  }
+
+  public PlayerEntity GetPlayerEntity(int authorityID){
+    PlayerEntity player;
+    return players.TryGetValue(authorityID, out player) ? player : null;
+  }
+
+  public void RemovePlayerEntity(PlayerEntity player){
+    players.Remove(player.authorityID);
   }
 
 }
