@@ -4,17 +4,20 @@ using UnityEngine;
 
 public class PlayerEntity : EntityUnit
 {
+    private Rigidbody rb;
+
     [Header("Abilities")]
     public Gun gun;
     public Ability mainAbility;
 
-    private Transform t;
+    private Transform cameraTransform;
 
     [Header("Movement")]
     public float speed = 10;
     public float jumpGravity = -10f;
     public float jumpSpeed = 3f;
     public float jumpVelocity;
+    public LayerMask groundLayerMask;
 
     [Header("Rotation")]
     public float clampAngle = 80f;
@@ -41,6 +44,14 @@ public class PlayerEntity : EntityUnit
         return SetEntityHelper(GameInitializer.Instance.playerPrefab);
     }
 
+    public override void AwakeEntity()
+    {
+        base.AwakeEntity();
+
+        //We change the camera's rotation
+        cameraTransform = transform.GetChild(0);
+    }
+
     // Called once before UpdateEntity()
     public override void StartEntity()
     {
@@ -50,17 +61,16 @@ public class PlayerEntity : EntityUnit
         // You can access this player later using it's authority ID
         // UnitManager.Local.GetPlayerEntity(id);
         UnitManager.Local.AddPlayerEntity(this);
-
+        rb = GetComponent<Rigidbody>();
         gun = GetComponentInChildren<Gun>();
         mainAbility = GetComponentInChildren<Ability>();
+
 
         // Since the camera comes with the player entity
         // We will destroy it IF we don't own it
         if (isMine)
         {
             Cursor.lockState = CursorLockMode.Locked;
-
-            t = transform;
 
             var rot = transform.localRotation.eulerAngles;
             rotX = rot.x;
@@ -92,31 +102,22 @@ public class PlayerEntity : EntityUnit
 
             // Create rotation and use it
             var rot = Quaternion.Euler(rotX, rotY, 0f);
-            t.rotation = rot;
-            
+            cameraTransform.rotation = rot;
+
             // ----------------------------------------------------------
 
             // Get player movement input and create base movement
+            var velocity = rb.velocity;
+
             var delta = GetDirectionInput;
-            Vector3 movement = delta * speed * Time.deltaTime;
+            velocity.x = delta.x * speed;
+            velocity.z = delta.z * speed;
 
             // Set jump velocity based on jump input, apply gravity, and apply the velocity back to movement
-            if (Input.GetButtonDown("Jump")){
-              jumpVelocity = jumpSpeed;
+            if (Input.GetButtonDown("Jump") && Physics.Raycast(transform.position + new Vector3(0f, 0.25f, 0f), Vector3.down, 0.5f, groundLayerMask)){
+              velocity.y = jumpSpeed;
             }
-            jumpVelocity += jumpGravity * Time.deltaTime;
-            movement.y = jumpVelocity * Time.deltaTime;
-
-            // Actually move
-            transform.position += movement;
-
-            // Fix position if below ground
-            var position = transform.position;
-            if (position.y <= 0){
-              position.y = 0;
-              jumpVelocity = 0;
-              transform.position = position;
-            }
+            rb.velocity = velocity;
 
             // -------------------------------------------------------
 
@@ -139,7 +140,7 @@ public class PlayerEntity : EntityUnit
 
             // Lerp returns a value between basePosition and nextPosition, based on t
             transform.position = Vector3.Lerp(basePosition, nextPosition, t);
-            transform.rotation = Quaternion.Slerp(baseRotation, nextRotation, t);
+            this.cameraTransform.rotation = Quaternion.Slerp(baseRotation, nextRotation, t);
         }
     }
 
@@ -179,7 +180,7 @@ public class PlayerEntity : EntityUnit
 
         // Add transform.position and transform.rotation to network message. We can access it with 'p' and 'r'.
         h.Add('p', transform.position);
-        h.Add('r', transform.rotation);
+        h.Add('r', cameraTransform.rotation);
     }
 
     // Only called on others' clients
@@ -199,7 +200,7 @@ public class PlayerEntity : EntityUnit
 
         // Accessing the Quaternion with the key 'r'
         if (h.TryGetValue('r', out val)){
-            baseRotation = transform.rotation;
+            baseRotation = cameraTransform.rotation;
             nextRotation = (Quaternion)val;
         }
     }
