@@ -5,9 +5,14 @@ using UnityEngine;
 public class Gun : MonoBehaviour {
     public Transform firePoint;
 
+    [Header("Bullet Stats")]
     public float bulletSpeed = 10f;
-    public float fireRate = 1f;
+    public float bulletAliveTime = 1f;
+    public int bulletPenetration = 0;
+    public int bulletReflection = 0;
 
+    [Header("Gun Stats")]
+    public float fireRate = 1f;
     private float timeToFire = 0f;
 
     void Start() {
@@ -39,12 +44,15 @@ public class Gun : MonoBehaviour {
     {
         // Create bullet
         // This looks overcomplicated. But this is exactly how UnitManager does it
-        var entity = MoveBullet.CreateEntity() as MoveBullet;
+        var entity = BulletEntity.CreateEntity() as BulletEntity;
 
         // Insert data into bullet
-        entity.trans = firePoint;
+        entity.startingPosition = firePoint.position;
+        entity.startingRotation = firePoint.rotation;
         entity.moveSpeed = bulletSpeed;
-        entity.direction = Vector3.forward;
+
+        entity.timer = bulletAliveTime;
+        entity.reflection = bulletReflection;
 
         // Register bullet so it can appear on other people's clients
         UnitManager.Local.Register(entity);
