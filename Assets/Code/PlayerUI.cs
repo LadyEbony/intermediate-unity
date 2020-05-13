@@ -13,6 +13,7 @@ public class PlayerUI : MonoBehaviour {
 
   [Header("Ability")]
   public Image abilityCooldown;
+  public Image abilityCooldown2;
 
   [Header("Gun")]
   public Image gunFill;
@@ -30,6 +31,9 @@ public class PlayerUI : MonoBehaviour {
 
       if (player.mainAbility)
         abilityCooldown.fillAmount = player.mainAbility.GetCooldownRatio;
+
+      if (player.alternateAbility)
+        abilityCooldown2.fillAmount = player.alternateAbility.GetCooldownRatio;
 
       if (player.gun){
         gunFill.fillAmount = player.gun.GetDisplayRatio;

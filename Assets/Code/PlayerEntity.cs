@@ -13,6 +13,7 @@ public class PlayerEntity : EntityUnit
     [Header("Abilities")]
     public Gun gun;
     public Ability mainAbility;
+    public Ability alternateAbility;
 
     private Transform cameraTransform;
 
@@ -76,7 +77,10 @@ public class PlayerEntity : EntityUnit
 
             rb = GetComponent<Rigidbody>();
             gun = GetComponentInChildren<Gun>();
-            mainAbility = GetComponentInChildren<Ability>();
+
+            var abilities = GetComponentsInChildren<Ability>();
+            if (abilities.Length >= 1) mainAbility = abilities[0];
+            if (abilities.Length >= 2) alternateAbility = abilities[1];
 
             Cursor.lockState = CursorLockMode.Locked;
 
@@ -130,6 +134,11 @@ public class PlayerEntity : EntityUnit
             // player entity will interact with ability
             if (Input.GetMouseButtonDown(1)){
               mainAbility?.Use();
+            }
+
+            // player entity will interact with ability
+            if (Input.GetKeyDown(KeyCode.LeftShift)){
+              alternateAbility?.Use();
             }
         }
         else
