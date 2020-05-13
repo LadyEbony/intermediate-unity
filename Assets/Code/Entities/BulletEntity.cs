@@ -12,6 +12,8 @@ public class BulletEntity : EntityUnit {
   public float timer;
   public int reflection, penetration;
   private float destroyTimer;
+  public int baseDamage;
+  public float damageModifier = 1;
 
   [HideInInspector] public Rigidbody rb;
 
@@ -134,7 +136,21 @@ public class BulletEntity : EntityUnit {
     reflection -= 1;
   }
 
-  void DestroyBullet() {
+  public void OnTriggerEnter(Collider collision){
+    if (!isMine) return;
+
+    var enemy = collision.gameObject;
+
+    if (enemy.layer != 12) return; //don't deal damage unless the layer damage encountered
+
+    var enemyAi = enemy.GetComponentInParent<AIEntity>();
+
+    if (enemyAi == null) return;
+
+    enemyAi.ApplyDamage(Mathf.RoundToInt(baseDamage * damageModifier));
+  }
+
+    void DestroyBullet() {
     // Deregister bullet so it can STOP appearing on other people's clients
     UnitManager.Local.Deregister(this);
 

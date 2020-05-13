@@ -5,6 +5,7 @@ using UnityEngine;
 public class CharacterEntity : EntityUnit {
 
   [Header("Health")]
+  public int maxHealth;
   public int health;
   public int shield;
 
@@ -57,7 +58,11 @@ public class CharacterEntity : EntityUnit {
   }
 
   public void ApplyDamage(int damage){
-    // do damage to shield first
-    // then do damage to health
-  }
+        // do damage to shield first
+        // then do damage to health
+        if (shield > 0) shield = Mathf.Clamp(shield - damage, 0, shield);
+        else health = Mathf.Clamp(health - damage, 0, maxHealth);
+
+        Debug.Log("Applied" + damage + ", remaining shield: " + shield + ", remaining health: " + health + ", Max Health: " + maxHealth);
+    }
 }

@@ -292,6 +292,7 @@ MonoBehaviour:
   entityID: 0
   authorityID: 0
   updateTimer: 0.1
+  maxHealth: 100
   health: 100
   shield: 50
   maxSpeed: 11
