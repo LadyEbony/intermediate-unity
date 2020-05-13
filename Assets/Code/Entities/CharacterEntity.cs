@@ -55,4 +55,9 @@ public class CharacterEntity : EntityUnit {
         nextPosition = (Vector3)val;
     }
   }
+
+  public void ApplyDamage(int damage){
+    // do damage to shield first
+    // then do damage to health
+  }
 }
