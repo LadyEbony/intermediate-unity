@@ -13,11 +13,13 @@ public class PlayerEntity : EntityUnit
     private Transform cameraTransform;
 
     [Header("Movement")]
-    public float speed = 10;
-    public float jumpGravity = -10f;
-    public float jumpSpeed = 3f;
-    public float jumpVelocity;
+    public float maxGroundSpeed = 11f;
+    public float acceleration = 44f;
+    public float jumpSpeed = 18f;
+
+    [Header("Ground Check")]
     public LayerMask groundLayerMask;
+    public float groundHalfExtent, groundHalfHeight;
 
     [Header("Rotation")]
     public float clampAngle = 80f;
@@ -61,15 +63,14 @@ public class PlayerEntity : EntityUnit
         // You can access this player later using it's authority ID
         // UnitManager.Local.GetPlayerEntity(id);
         UnitManager.Local.AddPlayerEntity(this);
-        rb = GetComponent<Rigidbody>();
-        gun = GetComponentInChildren<Gun>();
-        mainAbility = GetComponentInChildren<Ability>();
-
-
-        // Since the camera comes with the player entity
-        // We will destroy it IF we don't own it
+        
+        
         if (isMine)
         {
+            rb = GetComponent<Rigidbody>();
+            gun = GetComponentInChildren<Gun>();
+            mainAbility = GetComponentInChildren<Ability>();
+
             Cursor.lockState = CursorLockMode.Locked;
 
             var rot = transform.localRotation.eulerAngles;
@@ -78,11 +79,20 @@ public class PlayerEntity : EntityUnit
         }
         else
         {
+            // Since the camera comes with the player entity
+            // We will destroy it IF we don't own it
+
+            // NEW: We will destroy collider's of gameobject's we don't own
+            // NEW: Pro = no weird network collision
+            // NEW: Con = can't push people
+
+            Destroy(GetComponent<Rigidbody>());
+            Destroy(GetComponent<Collider>());
+
             var camera = GetComponentInChildren<Camera>();
             Destroy(camera.gameObject);
         }
     }
-
 
     public override void UpdateEntity()
     {
@@ -103,21 +113,6 @@ public class PlayerEntity : EntityUnit
             // Create rotation and use it
             var rot = Quaternion.Euler(rotX, rotY, 0f);
             cameraTransform.rotation = rot;
-
-            // ----------------------------------------------------------
-
-            // Get player movement input and create base movement
-            var velocity = rb.velocity;
-
-            var delta = GetDirectionInput;
-            velocity.x = delta.x * speed;
-            velocity.z = delta.z * speed;
-
-            // Set jump velocity based on jump input, apply gravity, and apply the velocity back to movement
-            if (Input.GetButtonDown("Jump") && Physics.Raycast(transform.position + new Vector3(0f, 0.25f, 0f), Vector3.down, 0.5f, groundLayerMask)){
-              velocity.y = jumpSpeed;
-            }
-            rb.velocity = velocity;
 
             // -------------------------------------------------------
 
@@ -142,6 +137,33 @@ public class PlayerEntity : EntityUnit
             transform.position = Vector3.Lerp(basePosition, nextPosition, t);
             this.cameraTransform.rotation = Quaternion.Slerp(baseRotation, nextRotation, t);
         }
+    }
+
+  private void FixedUpdate() {
+    if (isMine){
+                  // Get player movement input and create base movement
+            var velocity = rb.velocity;
+            var delta = GetDirectionInput;
+
+            // NEW: Velocity is always approaching the max speed
+            // NEW: Even if somehow the velocity went overboard, it will fix itself
+            velocity.x = Mathf.MoveTowards(velocity.x, delta.x * maxGroundSpeed, acceleration * Time.deltaTime);
+            velocity.z = Mathf.MoveTowards(velocity.z, delta.z * maxGroundSpeed, acceleration * Time.deltaTime);
+
+            // ground
+            if (Input.GetButtonDown("Jump") && OnGround){
+              velocity.y = jumpSpeed;
+            } 
+
+            rb.velocity = velocity;
+    }
+  }
+
+  // NEW: Use a box instead of a line.
+  public bool OnGround{
+      get {
+        return Physics.CheckBox(transform.position, new Vector3(groundHalfExtent, groundHalfHeight, groundHalfExtent), Quaternion.identity, groundLayerMask);
+      }
     }
 
     public static Vector3 GetDirectionInput
@@ -204,5 +226,10 @@ public class PlayerEntity : EntityUnit
             nextRotation = (Quaternion)val;
         }
     }
+
+  public void OnDrawGizmosSelected() {
+    Gizmos.color = Color.green;
+    Gizmos.DrawWireCube(transform.position, new Vector3(groundHalfExtent, groundHalfHeight, groundHalfExtent) * 2f);
+  }
 
 }
