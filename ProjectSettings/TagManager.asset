@@ -13,10 +13,10 @@ TagManager:
   - UI
   - 
   - 
-  - Debris
-  - Ground
-  - Player
-  - 
+  - Projectile
+  - Bullet
+  - Terrain
+  - Character
   - 
   - 
   - 

@@ -206,12 +206,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6568dabdcfa5bdc469823bf6a559f527, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 1304642991259110217, guid: 739ea3e36af8b0f43b0a88e09e8d10cb,
-    type: 3}
   firePoint: {fileID: 2570564877361581980}
   bulletSpeed: 20
+  bulletAliveTime: 1
+  bulletPenetration: 0
+  bulletReflection: 2
   fireRate: 60
-  bulletDestroyTime: 5
 --- !u!114 &2570564877065612289
 MonoBehaviour:
   m_ObjectHideFlags: 0

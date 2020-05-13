@@ -10,6 +10,10 @@ public class Explosion : Projectile {
   public  LayerMask explosionLayer;
   public GameObject explostionEffect;
   
+  public new static EntityUnit CreateEntity(){
+    return SetEntityHelper(GameInitializer.Instance.grenadePrefab);
+  }
+
   public override void Explode() {
     //destroy everything in the radius and destroy this object
     Collider[] hitColliders = Physics.OverlapSphere(transform.position, explosionRadius, explosionLayer);
@@ -27,4 +31,5 @@ public class Explosion : Projectile {
     var eft = Instantiate(explostionEffect, transform.position, Quaternion.identity);
     Destroy(eft, 2f);
   }
+
 }

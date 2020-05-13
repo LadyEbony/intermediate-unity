@@ -5,10 +5,22 @@ using UnityEngine;
 public class Gun : MonoBehaviour {
     public Transform firePoint;
 
+    [Header("Bullet Stats")]
     public float bulletSpeed = 10f;
-    public float fireRate = 1f;
+    public float bulletAliveTime = 1f;
+    public int bulletPenetration = 0;
+    public int bulletReflection = 0;
 
+    [Header("Gun Stats")]
+    public float fireRate = 1f;
     private float timeToFire = 0f;
+    public float angleDeviation = 2f;
+
+    [Header("Magazine Stats")]
+    public int ammoCount = 30;
+    public int maxAmmoCount = 30;
+    public float reloadTime = 1f;
+    private float baseReloadTime, nextReloadTime;
 
     void Start() {
       if(firePoint == null) {
@@ -22,10 +34,36 @@ public class Gun : MonoBehaviour {
     public void HandleGun(){
       //HandleMouse();
 
-      if (Input.GetMouseButton(0) && Time.time >= timeToFire)
-      {
+      // NEW: Reload gun
+      if (ammoCount == 0 && Time.time >= nextReloadTime){
+        ammoCount = maxAmmoCount;
+      }
+
+      if (ammoCount > 0 && Input.GetMouseButton(0) && Time.time >= timeToFire) {
         Shoot();
         timeToFire = Time.time + 1 / fireRate;
+        ammoCount -= 1;
+
+        // NEW: Reload timers
+        // NEW: Not doing the ammo count decrement in shoot, that way we can do more crazy shit later
+        if (ammoCount <= 0){
+          baseReloadTime = Time.time;
+          nextReloadTime = baseReloadTime + reloadTime;
+        }
+      }
+    }
+
+    public float GetDisplayRatio{
+      get {
+        if (ammoCount > 0) 
+          return (float)ammoCount / maxAmmoCount;
+        return (Time.time - baseReloadTime) / (nextReloadTime - baseReloadTime);
+      }
+    }
+
+    public string GetDisplayText{
+      get {
+        return string.Format("{0}/{1}", ammoCount, maxAmmoCount);
       }
     }
 
@@ -39,14 +77,25 @@ public class Gun : MonoBehaviour {
     {
         // Create bullet
         // This looks overcomplicated. But this is exactly how UnitManager does it
-        var entity = MoveBullet.CreateEntity() as MoveBullet;
+        var entity = BulletEntity.CreateEntity() as BulletEntity;
 
         // Insert data into bullet
-        entity.trans = firePoint;
+        entity.startingPosition = firePoint.position;
+        entity.startingRotation = firePoint.rotation * Quaternion.Euler(GetAngleDeviation, GetAngleDeviation, GetAngleDeviation);
         entity.moveSpeed = bulletSpeed;
-        entity.direction = Vector3.forward;
+
+        entity.timer = bulletAliveTime;
+        entity.reflection = bulletReflection;
 
         // Register bullet so it can appear on other people's clients
         UnitManager.Local.Register(entity);
+    }
+
+    // NEW: Bullets aren't perfectly straight
+    // NEW: Let's add a little deviation
+    float GetAngleDeviation{
+      get {
+        return Random.Range(-angleDeviation, angleDeviation);
+      }
     }
 }

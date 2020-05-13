@@ -165,6 +165,8 @@ public class UnitManager : EntityBase, IMasterOwnsUnclaimed {
     EntityManager.DeRegister(this);
 
     foreach(var item in entities.Values){
+      if (item == null) continue;
+
       var obj = item.gameObject;
       obj.SetActive(false);
       Destroy(obj, 1f);

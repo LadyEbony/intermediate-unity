@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4042603503088823309}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5505108083710861057}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: Hand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -75,7 +75,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adb68465d16b374408bc8987caf92c68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blink: 5
+  cooldown: 2
+  blink: 8
   layerMask:
     serializedVersion: 2
     m_Bits: 1
@@ -90,7 +91,7 @@ GameObject:
   - component: {fileID: 5308971771192702633}
   - component: {fileID: 2339827965667517756}
   - component: {fileID: 7305625866719013010}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: Renderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -169,7 +170,7 @@ GameObject:
   - component: {fileID: 5509306152405975661}
   - component: {fileID: 5509306152405975659}
   - component: {fileID: 5509306152405975660}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -253,7 +254,7 @@ GameObject:
   - component: {fileID: 5509306154181255397}
   - component: {fileID: 8664013693350196877}
   - component: {fileID: 1548073648043988660}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -291,23 +292,27 @@ MonoBehaviour:
   entityID: 0
   authorityID: 0
   updateTimer: 0.1
-  gun: {fileID: 2570564876849282088}
-  mainAbility: {fileID: 0}
-  speed: 10
-  jumpGravity: -30
-  jumpSpeed: 10
-  jumpVelocity: 0
-  groundLayerMask:
-    serializedVersion: 2
-    m_Bits: 257
-  clampAngle: 80
-  yawSensitivity: 100
-  pitchSensitivity: 100
+  health: 100
+  shield: 50
+  maxSpeed: 11
+  acceleration: 88
   baseUpdateTime: 0
   basePosition: {x: 0, y: 0, z: 0}
   nextPosition: {x: 0, y: 0, z: 0}
   baseRotation: {x: 0, y: 0, z: 0, w: 0}
   nextRotation: {x: 0, y: 0, z: 0, w: 0}
+  gun: {fileID: 2570564876849282088}
+  mainAbility: {fileID: 0}
+  alternateAbility: {fileID: 0}
+  jumpSpeed: 18
+  groundLayerMask:
+    serializedVersion: 2
+    m_Bits: 1024
+  groundHalfExtent: 1
+  groundHalfHeight: 0.25
+  clampAngle: 80
+  yawSensitivity: 100
+  pitchSensitivity: 100
 --- !u!54 &8664013693350196877
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -331,7 +336,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5509306154181255399}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: bd22aa8f6bbe17e48833e50f853ebaec, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 1.5
@@ -348,12 +353,12 @@ PrefabInstance:
     - target: {fileID: 2570564876375115933, guid: 642880ed3bc629249b12dcd2bc9191e7,
         type: 3}
       propertyPath: m_Layer
-      value: 10
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 2570564876496286990, guid: 642880ed3bc629249b12dcd2bc9191e7,
         type: 3}
       propertyPath: m_Layer
-      value: 10
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 2570564877065612290, guid: 642880ed3bc629249b12dcd2bc9191e7,
         type: 3}
@@ -418,20 +423,19 @@ PrefabInstance:
     - target: {fileID: 2570564877065612292, guid: 642880ed3bc629249b12dcd2bc9191e7,
         type: 3}
       propertyPath: m_Layer
-      value: 10
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 2570564877357710746, guid: 642880ed3bc629249b12dcd2bc9191e7,
         type: 3}
       propertyPath: m_Layer
-      value: 10
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 2570564877361581981, guid: 642880ed3bc629249b12dcd2bc9191e7,
         type: 3}
       propertyPath: m_Layer
-      value: 10
+      value: 11
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 2570564877065612289, guid: 642880ed3bc629249b12dcd2bc9191e7, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 642880ed3bc629249b12dcd2bc9191e7, type: 3}
 --- !u!1 &2570564876849282095 stripped
 GameObject:
