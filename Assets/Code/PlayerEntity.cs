@@ -6,6 +6,10 @@ public class PlayerEntity : EntityUnit
 {
     private Rigidbody rb;
 
+    [Header("Health")]
+    public int health;
+    public int shield;
+
     [Header("Abilities")]
     public Gun gun;
     public Ability mainAbility;
@@ -64,9 +68,12 @@ public class PlayerEntity : EntityUnit
         // UnitManager.Local.GetPlayerEntity(id);
         UnitManager.Local.AddPlayerEntity(this);
         
-        
         if (isMine)
         {
+            // find base camera and just destroy it
+            var ec = GameObject.Find("EditorCamera");
+            Destroy(ec);
+
             rb = GetComponent<Rigidbody>();
             gun = GetComponentInChildren<Gun>();
             mainAbility = GetComponentInChildren<Ability>();
@@ -122,7 +129,7 @@ public class PlayerEntity : EntityUnit
 
             // player entity will interact with ability
             if (Input.GetMouseButtonDown(1)){
-              mainAbility?.Activate();
+              mainAbility?.Use();
             }
         }
         else

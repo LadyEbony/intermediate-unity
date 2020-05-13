@@ -14,6 +14,7 @@ public class Gun : MonoBehaviour {
     [Header("Gun Stats")]
     public float fireRate = 1f;
     private float timeToFire = 0f;
+    public float angleDeviation = 2f;
 
     void Start() {
       if(firePoint == null) {
@@ -48,7 +49,7 @@ public class Gun : MonoBehaviour {
 
         // Insert data into bullet
         entity.startingPosition = firePoint.position;
-        entity.startingRotation = firePoint.rotation;
+        entity.startingRotation = firePoint.rotation * Quaternion.Euler(GetAngleDeviation, GetAngleDeviation, GetAngleDeviation);
         entity.moveSpeed = bulletSpeed;
 
         entity.timer = bulletAliveTime;
@@ -56,5 +57,13 @@ public class Gun : MonoBehaviour {
 
         // Register bullet so it can appear on other people's clients
         UnitManager.Local.Register(entity);
+    }
+
+    // NEW: Bullets aren't perfectly straight
+    // NEW: Let's add a little deviation
+    float GetAngleDeviation{
+      get {
+        return Random.Range(-angleDeviation, angleDeviation);
+      }
     }
 }

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adb68465d16b374408bc8987caf92c68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cooldown: 4
   blink: 5
   layerMask:
     serializedVersion: 2
@@ -291,6 +292,8 @@ MonoBehaviour:
   entityID: 0
   authorityID: 0
   updateTimer: 0.1
+  health: 100
+  shield: 50
   gun: {fileID: 891621493}
   mainAbility: {fileID: 0}
   maxGroundSpeed: 11
