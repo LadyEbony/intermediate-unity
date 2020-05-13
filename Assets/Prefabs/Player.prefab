@@ -1,22 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &2174700066304068318
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2570564876849282095}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: adb68465d16b374408bc8987caf92c68, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cooldown: 2
-  blink: 8
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 1
 --- !u!1 &309040327706585846
 GameObject:
   m_ObjectHideFlags: 0
@@ -26,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4042603503088823309}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -59,7 +42,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5505108083710861057}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: Hand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -80,6 +63,23 @@ Transform:
   m_Father: {fileID: 4042603503088823309}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2174700066304068318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2570564876849282095}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adb68465d16b374408bc8987caf92c68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cooldown: 2
+  blink: 8
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!1 &3282333141616709144
 GameObject:
   m_ObjectHideFlags: 0
@@ -91,7 +91,7 @@ GameObject:
   - component: {fileID: 5308971771192702633}
   - component: {fileID: 2339827965667517756}
   - component: {fileID: 7305625866719013010}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: Renderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -170,7 +170,7 @@ GameObject:
   - component: {fileID: 5509306152405975661}
   - component: {fileID: 5509306152405975659}
   - component: {fileID: 5509306152405975660}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -254,7 +254,7 @@ GameObject:
   - component: {fileID: 5509306154181255397}
   - component: {fileID: 8664013693350196877}
   - component: {fileID: 1548073648043988660}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -294,25 +294,25 @@ MonoBehaviour:
   updateTimer: 0.1
   health: 100
   shield: 50
-  gun: {fileID: 2570564876849282088}
-  mainAbility: {fileID: 0}
-  alternateAbility: {fileID: 0}
-  maxGroundSpeed: 11
+  maxSpeed: 11
   acceleration: 88
-  jumpSpeed: 18
-  groundLayerMask:
-    serializedVersion: 2
-    m_Bits: 769
-  groundHalfExtent: 1
-  groundHalfHeight: 0.25
-  clampAngle: 80
-  yawSensitivity: 100
-  pitchSensitivity: 100
   baseUpdateTime: 0
   basePosition: {x: 0, y: 0, z: 0}
   nextPosition: {x: 0, y: 0, z: 0}
   baseRotation: {x: 0, y: 0, z: 0, w: 0}
   nextRotation: {x: 0, y: 0, z: 0, w: 0}
+  gun: {fileID: 2570564876849282088}
+  mainAbility: {fileID: 0}
+  alternateAbility: {fileID: 0}
+  jumpSpeed: 18
+  groundLayerMask:
+    serializedVersion: 2
+    m_Bits: 1024
+  groundHalfExtent: 1
+  groundHalfHeight: 0.25
+  clampAngle: 80
+  yawSensitivity: 100
+  pitchSensitivity: 100
 --- !u!54 &8664013693350196877
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -353,12 +353,12 @@ PrefabInstance:
     - target: {fileID: 2570564876375115933, guid: 642880ed3bc629249b12dcd2bc9191e7,
         type: 3}
       propertyPath: m_Layer
-      value: 10
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 2570564876496286990, guid: 642880ed3bc629249b12dcd2bc9191e7,
         type: 3}
       propertyPath: m_Layer
-      value: 10
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 2570564877065612290, guid: 642880ed3bc629249b12dcd2bc9191e7,
         type: 3}
@@ -423,17 +423,17 @@ PrefabInstance:
     - target: {fileID: 2570564877065612292, guid: 642880ed3bc629249b12dcd2bc9191e7,
         type: 3}
       propertyPath: m_Layer
-      value: 10
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 2570564877357710746, guid: 642880ed3bc629249b12dcd2bc9191e7,
         type: 3}
       propertyPath: m_Layer
-      value: 10
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 2570564877361581981, guid: 642880ed3bc629249b12dcd2bc9191e7,
         type: 3}
       propertyPath: m_Layer
-      value: 10
+      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 642880ed3bc629249b12dcd2bc9191e7, type: 3}

@@ -32,6 +32,8 @@ public class BulletEntity : EntityUnit {
   public override void StartEntity() {
     base.StartEntity();
 
+    transform.position = startingPosition;
+    transform.rotation = startingRotation;
     rb.position = startingPosition;
     rb.rotation = startingRotation;
 
@@ -98,6 +100,8 @@ public class BulletEntity : EntityUnit {
 
     // For reflection
     if (changed){
+      transform.position = startingPosition;
+      transform.rotation = startingRotation;
       rb.position = startingPosition;
       rb.rotation = startingRotation;
     }

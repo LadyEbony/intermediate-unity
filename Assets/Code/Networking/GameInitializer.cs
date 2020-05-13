@@ -7,6 +7,7 @@ using ExitGames.Client.Photon.LoadBalancing;
 public class GameInitializer : MonoBehaviour {
 
   public static GameInitializer Instance { get; private set; }
+  public bool initialized;
 
   public Dictionary<int, UnitManager> managers;
   public GameObject playerPrefab;
@@ -32,6 +33,7 @@ public class GameInitializer : MonoBehaviour {
 
   // Start is called before the first frame update
   IEnumerator Start() {
+    initialized = false;
     while (!NetworkManager.expectedState) yield return null;
 
     if (NetworkManager.inRoom){
@@ -53,6 +55,7 @@ public class GameInitializer : MonoBehaviour {
       AddUnitManager(id, manager);
       ModifyLocalManager(manager);
     }
+    initialized = true;
   }
 
   private UnitManager CreateManager(int id){
