@@ -16,6 +16,12 @@ public class Gun : MonoBehaviour {
     private float timeToFire = 0f;
     public float angleDeviation = 2f;
 
+    [Header("Magazine Stats")]
+    public int ammoCount = 30;
+    public int maxAmmoCount = 30;
+    public float reloadTime = 1f;
+    private float baseReloadTime, nextReloadTime;
+
     void Start() {
       if(firePoint == null) {
         Debug.LogError("Gun: No Fire Point is found");
@@ -28,10 +34,36 @@ public class Gun : MonoBehaviour {
     public void HandleGun(){
       //HandleMouse();
 
-      if (Input.GetMouseButton(0) && Time.time >= timeToFire)
-      {
+      // NEW: Reload gun
+      if (ammoCount == 0 && Time.time >= nextReloadTime){
+        ammoCount = maxAmmoCount;
+      }
+
+      if (ammoCount > 0 && Input.GetMouseButton(0) && Time.time >= timeToFire) {
         Shoot();
         timeToFire = Time.time + 1 / fireRate;
+        ammoCount -= 1;
+
+        // NEW: Reload timers
+        // NEW: Not doing the ammo count decrement in shoot, that way we can do more crazy shit later
+        if (ammoCount <= 0){
+          baseReloadTime = Time.time;
+          nextReloadTime = baseReloadTime + reloadTime;
+        }
+      }
+    }
+
+    public float GetDisplayRatio{
+      get {
+        if (ammoCount > 0) 
+          return (float)ammoCount / maxAmmoCount;
+        return (Time.time - baseReloadTime) / (nextReloadTime - baseReloadTime);
+      }
+    }
+
+    public string GetDisplayText{
+      get {
+        return string.Format("{0}/{1}", ammoCount, maxAmmoCount);
       }
     }
 

@@ -14,6 +14,10 @@ public class PlayerUI : MonoBehaviour {
   [Header("Ability")]
   public Image abilityCooldown;
 
+  [Header("Gun")]
+  public Image gunFill;
+  public TextMeshProUGUI gunText;
+
   // As you may guess, lateupdate happens after all updates
   private void LateUpdate() {
     var player = UnitManager.LocalPlayer;
@@ -26,6 +30,11 @@ public class PlayerUI : MonoBehaviour {
 
       if (player.mainAbility)
         abilityCooldown.fillAmount = player.mainAbility.GetCooldownRatio;
+
+      if (player.gun){
+        gunFill.fillAmount = player.gun.GetDisplayRatio;
+        gunText.text = player.gun.GetDisplayText;
+      }
     }
   }
 
