@@ -38,6 +38,7 @@ public class CharacterEntity : EntityUnit
         base.UpdateEntity();
         if (isMine)
         {
+            ApplyDebuff();
             LocalUpdate();
         }
         else
@@ -72,6 +73,24 @@ public class CharacterEntity : EntityUnit
         {
             basePosition = transform.position;
             nextPosition = (Vector3)val;
+        }
+    }
+
+    void ApplyDebuff()
+    {
+        if(debuff == damageType.fire)
+        {
+            if(timer <= 0)
+            {
+                debuff = damageType.normal;
+            }
+            if(counter >= 0.5)
+            {
+                ApplyDamage(DamagePerSec, damageType.normal, 0, 0);
+                counter = 0;
+            }
+            counter += Time.deltaTime;
+            timer -= Time.deltaTime;
         }
     }
 
