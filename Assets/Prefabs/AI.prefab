@@ -195,10 +195,10 @@ MonoBehaviour:
   searchTimer: 0.5
   targetingSpeedModifier: 0.125
   barrelTransform: {fileID: 4950297041453474373}
-  bulletDamage: 1
-  bulletFirerate: 10
-  bulletSpeed: 10
-  bulletAliveTime: 1
+  bulletDamage: 5
+  bulletFirerate: 4
+  bulletSpeed: 20
+  bulletAliveTime: 2
 --- !u!195 &6362492093768295010
 NavMeshAgent:
   m_ObjectHideFlags: 0
