@@ -216,11 +216,11 @@ public class UnitManager : EntityBase, IMasterOwnsUnclaimed {
   
 
   [NetEvent('d')]
-  public void ApplyDamageEvent(int target, byte damage,  byte dType, byte dM, byte dbT){
+  public void ApplyDamageEvent(int target, byte damage,  byte dType){
     var e = Entity<CharacterEntity>(target);
     var dT = (damageType)dType;
     if (e){
-      e.ApplyDamage(damage, dT, (float)dM, (float)dbT);
+      e.ApplyDamage(damage, dT);
     }
   }
 

@@ -17,11 +17,10 @@ public class BulletEntity : EntityUnit {
 
   private float destroyTimer;
 
-    public damageType dType = damageType.normal;
-    public float damageModifier = 0.1f; //percentage of bullet damage applied to the special damage type, ex. fire.
-    public float debuffTimer;
+  public damageType dType = damageType.normal;
+  public float damageModifier = 0.1f; //percentage of bullet damage applied to the special damage type, ex. fire.
 
-    [HideInInspector] public Rigidbody rb;
+  [HideInInspector] public Rigidbody rb;
 
   // Necessary function
   // Creates an empty bullet prefab to place YOUR or OTHER'S data in
@@ -151,7 +150,7 @@ public class BulletEntity : EntityUnit {
       // bullets can only hurt things you own
       // meaning only yourself
       // and the host can only hurt ai
-      UnitManager.Local.RaiseEvent('d', true, entity.entityID, (byte)(baseDamage), (byte)dType, (byte)damageModifier, (byte)debuffTimer);
+      UnitManager.Local.RaiseEvent('d', true, entity.entityID, (byte)(Mathf.RoundToInt(baseDamage * damageModifier)), (byte)dType);
       UnitManager.Local.RaiseEvent('b', true, entityID, authorityID);
     }
 
