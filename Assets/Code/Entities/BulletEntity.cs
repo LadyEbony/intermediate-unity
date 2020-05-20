@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using UnityEngine;
 
+public enum damageType : byte { normal, pure, fire }
+
 public class BulletEntity : EntityUnit {
 
   [Header("Network Data")]
@@ -15,7 +17,11 @@ public class BulletEntity : EntityUnit {
 
   private float destroyTimer;
 
-  [HideInInspector] public Rigidbody rb;
+    public damageType dType = damageType.normal;
+    public float damageModifier = 0.1f; //percentage of bullet damage applied to the special damage type, ex. fire.
+    public float debuffTimer;
+
+    [HideInInspector] public Rigidbody rb;
 
   // Necessary function
   // Creates an empty bullet prefab to place YOUR or OTHER'S data in
@@ -145,7 +151,7 @@ public class BulletEntity : EntityUnit {
       // bullets can only hurt things you own
       // meaning only yourself
       // and the host can only hurt ai
-      UnitManager.Local.RaiseEvent('d', true, entity.entityID, (byte)(baseDamage));
+      UnitManager.Local.RaiseEvent('d', true, entity.entityID, (byte)(baseDamage), (byte)dType, (byte)damageModifier, (byte)debuffTimer);
       UnitManager.Local.RaiseEvent('b', true, entityID, authorityID);
     }
 
