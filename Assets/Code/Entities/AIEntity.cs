@@ -59,8 +59,8 @@ public class AIEntity : CharacterEntity {
   public override void UpdateEntity() {
     base.UpdateEntity();
 
-    // If ai targeting local client and within sight, shoot
-    if (target && IsPlayerRaycast() && Time.time >= timeToFire){
+    // If ai targeting something I own (me), and within sight, shoot
+    if (target && target.isMine && IsPlayerRaycast() && Time.time >= timeToFire){
       var bullet = BulletEntity.CreateEntity() as BulletEntity;
 
       bullet.startingPosition = barrelTransform.position;
@@ -70,7 +70,7 @@ public class AIEntity : CharacterEntity {
       bullet.timer = bulletAliveTime;
       bullet.reflection = 0;
 
-      UnitManager.Local.RegisterLocal(bullet);
+      UnitManager.Local.Register(bullet);
 
       timeToFire = Time.time + 1f / bulletFirerate;
     }
@@ -96,8 +96,6 @@ public class AIEntity : CharacterEntity {
       ai.speed = IsPlayerRaycast() ? slowSpeed : baseSpeed;
     }
 
-    
-    
   }
 
   protected override void RemoteUpdate() {
@@ -122,10 +120,9 @@ public class AIEntity : CharacterEntity {
     RaycastHit hit;
     if (Physics.Raycast(ray, out hit, float.MaxValue, targetLayerMask, QueryTriggerInteraction.Collide)){
       // testing hit on target player
-      var layer = hit.transform.gameObject.layer;
-      if (layer == 10) return false;  // hitting wall
-      if (layer == 12) return hit.transform.parent.gameObject == target.gameObject; // hitting damage trigger
-      return hit.transform.gameObject == target.gameObject; // hitting rigidbody ?????
+      // slow? probably
+      var parent = hit.transform.GetComponentInParent<PlayerEntity>();
+      return parent == target;
     }
     return false;
   }

@@ -223,4 +223,12 @@ public class UnitManager : EntityBase, IMasterOwnsUnclaimed {
     }
   }
 
+  [NetEvent('b')]
+  public void DestroyBullet(int entity, int authority){
+    var bullet = GameInitializer.Instance.Entity<BulletEntity>(entity, authority);
+    if (bullet){
+      bullet.DestroyBullet();
+    }
+  }
+
 }

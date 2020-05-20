@@ -7,13 +7,13 @@ public class BulletEntity : EntityUnit {
   public Vector3 startingPosition;
   public Quaternion startingRotation;
   public float moveSpeed;
-
-  [Header("Master Data")]
   public float timer;
-  public int reflection, penetration;
-  private float destroyTimer;
+
+  [Header("Network Data (Combat)")]
   public int baseDamage;
-  public float damageModifier = 1;
+  public int reflection, penetration;
+
+  private float destroyTimer;
 
   [HideInInspector] public Rigidbody rb;
 
@@ -46,7 +46,7 @@ public class BulletEntity : EntityUnit {
 
   // Called once every frame
   public override void UpdateEntity() {
-    if (isMine && destroyTimer <= Time.time){
+    if (destroyTimer <= Time.time){
       DestroyBullet();
     }
   }
@@ -63,6 +63,10 @@ public class BulletEntity : EntityUnit {
     h.Add('s', startingPosition);
     h.Add('r', startingRotation);
     h.Add('f', moveSpeed);
+    h.Add('t', timer);
+
+    h.Add('d', (byte)baseDamage);
+    h.Add('e', (byte)reflection);
   }
 
   // Only called on others' clients
@@ -74,47 +78,44 @@ public class BulletEntity : EntityUnit {
     // NEW: While setting transform.position works in Deserialize()
     // NEW: Network packets are recieved in random timings
     // NEW: As such, you may have saw the bullets glitch a little
-    // NEW: To remedy this, we only set the data when it's different from 
+    // NEW: To remedy this, we only set the data at the start and hope nothing goes wrong
 
     // Accessing the data we previously stored in Serialize
     
-    bool changed = false;
     if (h.TryGetValue('s', out val)) {
-      var sp = (Vector3)val;
-      if (sp != startingPosition){
-        changed = true;
-        startingPosition = sp;
-      }
+      startingPosition = (Vector3)val;
     }
 
     if (h.TryGetValue('r', out val)) {
-      var sr = (Quaternion)val;
-      if (sr != startingRotation){
-        changed = true;
-        startingRotation = sr;
-      }
+      startingRotation = (Quaternion)val;
     }
 
     if (h.TryGetValue('f', out val)) {
       moveSpeed = (float)val;
     }
 
-
-    // For reflection
-    if (changed){
-      transform.position = startingPosition;
-      transform.rotation = startingRotation;
-      rb.position = startingPosition;
-      rb.rotation = startingRotation;
+    if (h.TryGetValue('t', out val)){
+      timer = (float)val;
     }
+
+    if (h.TryGetValue('d', out val)){
+      baseDamage = (byte)val;
+    }
+
+    if (h.TryGetValue('e', out val)){
+      reflection = (byte)val;
+    }
+
   }
 
   // NEW: Rigidbodies have the ability to calculate contact points
   // NEW: This lets us easily do reflection
   // NEW: As a result, you need to take control of the rigidbody with isKinematic = true
   public void OnCollisionEnter(Collision collision) {
-    // Only master can calculate bullets
-    if (!isMine) return;
+    // Pretend there is no latency
+    // anyone can do the whole bounce
+
+    // if (!isMine) return;
 
     if (reflection == 0){
       DestroyBullet();
@@ -136,24 +137,34 @@ public class BulletEntity : EntityUnit {
     reflection -= 1;
   }
 
+  // Hopingfully only Damage trigger will call this
   public void OnTriggerEnter(Collider collision){
-    if (!isMine) return;
 
     var entity = collision.gameObject.GetComponentInParent<CharacterEntity>();
-    if (entity == null) return;
-    if (local && (entity as PlayerEntity) != UnitManager.LocalPlayer) return;  // if local, it can only hurt the local client
+    if (entity != null && entity.isMine){
+      // bullets can only hurt things you own
+      // meaning only yourself
+      // and the host can only hurt ai
+      UnitManager.Local.RaiseEvent('d', true, entity.entityID, (byte)(baseDamage));
+      UnitManager.Local.RaiseEvent('b', true, entityID, authorityID);
+    }
 
-    UnitManager.Local.RaiseEvent('d', true, entity.entityID, (byte)Mathf.FloorToInt(baseDamage * damageModifier));
-
-    DestroyBullet();
   }
 
-    void DestroyBullet() {
-    // Deregister bullet so it can STOP appearing on other people's clients
-    UnitManager.Local.Deregister(this);
+  /// <summary>
+  /// Destroys bullet if you own it. Otherwise disables it.
+  /// </summary>
+  public void DestroyBullet() {
+    if (isMine){
+      // Deregister bullet so it can STOP appearing on other people's clients
+      UnitManager.Local.Deregister(this);
 
-    // Then we destroy it normally
-    DestroyEntity();
-    Destroy(gameObject);
+      // Then we destroy it normally
+      DestroyEntity();
+      Destroy(gameObject);
+    } else {
+      DestroyEntity();
+      gameObject.SetActive(false);
+    }
   }
 }
