@@ -88,6 +88,12 @@ public class PlayerEntity : CharacterEntity {
         }
     }
 
+  public override void DestroyEntity() {
+    base.DestroyEntity();
+
+    UnitManager.Local.RemovePlayerEntity(this);
+  }
+
   protected override void LocalUpdate() {
     base.LocalUpdate();
 

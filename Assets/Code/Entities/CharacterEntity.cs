@@ -6,12 +6,16 @@ public class CharacterEntity : EntityUnit {
 
   [Header("Health")]
   public int maxHealth;
+  public int maxShield;
   public int health;
   public int shield;
 
   [Header("Movement")]
   public float maxSpeed = 11f;
   public float acceleration = 88f;
+
+  [Header("Extra")]
+  public Transform head;
 
   [Header("Network")]
   public float baseUpdateTime;
@@ -58,11 +62,11 @@ public class CharacterEntity : EntityUnit {
   }
 
   public void ApplyDamage(int damage){
-        // do damage to shield first
-        // then do damage to health
-        if (shield > 0) shield = Mathf.Clamp(shield - damage, 0, shield);
-        else health = Mathf.Clamp(health - damage, 0, maxHealth);
+    // do damage to shield first
+    // then do damage to health
+    if (shield > 0) shield = Mathf.Clamp(shield - damage, 0, shield);
+    else health = Mathf.Clamp(health - damage, 0, maxHealth);
 
-        Debug.Log("Applied" + damage + ", remaining shield: " + shield + ", remaining health: " + health + ", Max Health: " + maxHealth);
-    }
+    Debug.Log("Applied" + damage + ", remaining shield: " + shield + ", remaining health: " + health + ", Max Health: " + maxHealth);
+  }
 }

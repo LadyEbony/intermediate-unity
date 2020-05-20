@@ -10,6 +10,7 @@ public abstract class EntityUnit : MonoBehaviour {
   [Header("IDs")]
   public int entityID;
   public int authorityID;
+  public bool local;
 
   [Header("Update Timers")]
   public float updateTimer = 0.1f;

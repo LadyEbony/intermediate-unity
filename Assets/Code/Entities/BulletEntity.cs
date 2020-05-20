@@ -139,15 +139,13 @@ public class BulletEntity : EntityUnit {
   public void OnTriggerEnter(Collider collision){
     if (!isMine) return;
 
-    var enemy = collision.gameObject;
+    var entity = collision.gameObject.GetComponentInParent<CharacterEntity>();
+    if (entity == null) return;
+    if (local && (entity as PlayerEntity) != UnitManager.LocalPlayer) return;  // if local, it can only hurt the local client
 
-    if (enemy.layer != 12) return; //don't deal damage unless the layer damage encountered
+    UnitManager.Local.RaiseEvent('d', true, entity.entityID, (byte)Mathf.FloorToInt(baseDamage * damageModifier));
 
-    var enemyAi = enemy.GetComponentInParent<AIEntity>();
-
-    if (enemyAi == null) return;
-
-    enemyAi.ApplyDamage(Mathf.RoundToInt(baseDamage * damageModifier));
+    DestroyBullet();
   }
 
     void DestroyBullet() {

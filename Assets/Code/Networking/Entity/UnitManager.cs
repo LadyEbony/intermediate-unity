@@ -12,7 +12,9 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 public class UnitManager : EntityBase, IMasterOwnsUnclaimed {
 
   public Dictionary<int, EntityUnit> entities;
+  public Dictionary<int, EntityUnit> entitiesLocal;
   private Dictionary<int, PlayerEntity> players;
+  private Dictionary<int, AIEntity> enemies;
 
   public GameObject platePrefab;
 
@@ -55,6 +57,8 @@ public class UnitManager : EntityBase, IMasterOwnsUnclaimed {
   public override void Awake(){
     base.Awake();
     entities = new Dictionary<int, EntityUnit>();
+    entitiesLocal = new Dictionary<int, EntityUnit>();
+
     players = new Dictionary<int, PlayerEntity>();
   }
 
@@ -76,7 +80,7 @@ public class UnitManager : EntityBase, IMasterOwnsUnclaimed {
     return entities.TryGetValue(entityId, out item) ? item as T : null;
   } 
 
-  public void Register(EntityUnit unit){
+  private int GetRandomID(){
     // all entities here are server owned
     // int is what 2^32, this number is pretty much unique
     var id = Random.Range(int.MinValue, int.MaxValue);
@@ -84,8 +88,25 @@ public class UnitManager : EntityBase, IMasterOwnsUnclaimed {
       Debug.Log("Congratuations!. This message has a 0.0000000002% chance of appearing.");
       id = Random.Range(int.MinValue, int.MaxValue);
     }
+    return id;
+  }
+
+  public void Register(EntityUnit unit){
+    var id = GetRandomID();
+
     unit.entityID = id;
     unit.authorityID = authorityID;
+    entities.Add(id, unit);
+
+    unit.StartEntity();
+  }
+
+  public void RegisterLocal(EntityUnit unit){
+    var id = GetRandomID();
+
+    unit.entityID = id;
+    unit.authorityID = authorityID;
+    unit.local = true;
     entities.Add(id, unit);
 
     unit.StartEntity();
@@ -99,6 +120,8 @@ public class UnitManager : EntityBase, IMasterOwnsUnclaimed {
     base.Serialize(h);
 
     foreach(var e in entities.Values){
+      if (e.local) continue;
+  
       var temp = new Hashtable();
       // we only send the full entity data when their auto timers are triggered
       // otherwise send empty
@@ -177,13 +200,27 @@ public class UnitManager : EntityBase, IMasterOwnsUnclaimed {
     players.Add(player.authorityID, player);
   }
 
+  public void RemovePlayerEntity(PlayerEntity player){
+    players.Remove(player.authorityID);
+  }
+
   public PlayerEntity GetPlayerEntity(int authorityID){
     PlayerEntity player;
     return players.TryGetValue(authorityID, out player) ? player : null;
   }
 
-  public void RemovePlayerEntity(PlayerEntity player){
-    players.Remove(player.authorityID);
+  public PlayerEntity GetClosestPlayerEntity(Vector3 basePosition){
+    return players.Values.OrderBy(p => Vector3.SqrMagnitude(p.transform.position - basePosition)).FirstOrDefault();
+  }
+
+  
+
+  [NetEvent('d')]
+  public void ApplyDamageEvent(int target, byte damage){
+    var e = Entity<CharacterEntity>(target);
+    if (e){
+      e.ApplyDamage(damage);
+    }
   }
 
 }

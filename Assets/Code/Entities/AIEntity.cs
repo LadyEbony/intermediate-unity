@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using ExitGames.Client.Photon;
 using UnityEngine;
 using UnityEngine.AI;
@@ -7,6 +8,24 @@ using UnityEngine.AI;
 public class AIEntity : CharacterEntity {
 
   private NavMeshAgent ai;
+
+  [Header("AI Targeting")]
+  public PlayerEntity target;
+  public LayerMask targetLayerMask;
+  public float searchTimer = 0.5f;
+  private float nextSearchTimer;
+
+  public float targetingSpeedModifier = 0.125f;
+  private float baseSpeed;
+  private float slowSpeed;
+
+  [Header("Bullet")]
+  public Transform barrelTransform;
+  public int bulletDamage = 1;
+  public float bulletFirerate = 10f;
+  public float bulletSpeed = 10f;
+  public float bulletAliveTime = 1f;
+  private float timeToFire;
 
   // Necessary function
   // Creates an empty ai prefab to place YOUR or OTHER'S data in
@@ -25,6 +44,8 @@ public class AIEntity : CharacterEntity {
     base.StartEntity();
 
     ai.Warp(nextPosition);
+    baseSpeed = ai.speed;
+    slowSpeed = ai.speed * targetingSpeedModifier;
 
     if (isMine){
       
@@ -35,26 +56,48 @@ public class AIEntity : CharacterEntity {
     }
   }
 
+  public override void UpdateEntity() {
+    base.UpdateEntity();
+
+    // If ai targeting local client and within sight, shoot
+    if (target && IsPlayerRaycast() && Time.time >= timeToFire){
+      var bullet = BulletEntity.CreateEntity() as BulletEntity;
+
+      bullet.startingPosition = barrelTransform.position;
+      bullet.startingRotation = Quaternion.LookRotation((target.head.position - barrelTransform.position).normalized);
+      bullet.baseDamage = bulletDamage;
+      bullet.moveSpeed = bulletSpeed;
+      bullet.timer = bulletAliveTime;
+      bullet.reflection = 0;
+
+      UnitManager.Local.RegisterLocal(bullet);
+
+      timeToFire = Time.time + 1f / bulletFirerate;
+    }
+  }
+
   protected override void LocalUpdate() {
     base.LocalUpdate();
 
-    // near destination
-    if (Vector3.SqrMagnitude(transform.position - ai.destination) < 0.25f){
-      float searchRange = 5f;
-      while(searchRange < 100f){
-        var random = Random.insideUnitSphere * searchRange;
-        random.y = 0f;
-
-        NavMeshHit hit;
-        if(NavMesh.SamplePosition(transform.position + random, out hit, searchRange * 2f, NavMesh.AllAreas)){
-          // check if the sampled position is a valid walking point
-          ai.destination = hit.position;
-          break;
-        }
-
-        searchRange *= 2f;
-      }
+    // if the target ever disappears
+    // or the search timer is triggered
+    if (target == null || target.Equals(null) || Time.time >= nextSearchTimer){
+      // find new target
+      target = UnitManager.Local.GetClosestPlayerEntity(transform.position);
+      nextSearchTimer = Time.time + (searchTimer * (1f + Random.value));  // adding some variance so we don't search on the same timings
     }
+
+    
+    if (target){
+      // walk to player
+      ai.destination = target.transform.position;
+
+      // slow down if player in sight
+      ai.speed = IsPlayerRaycast() ? slowSpeed : baseSpeed;
+    }
+
+    
+    
   }
 
   protected override void RemoteUpdate() {
@@ -71,10 +114,27 @@ public class AIEntity : CharacterEntity {
     transform.rotation = Quaternion.Slerp(baseRotation, nextRotation, t);
   }
 
+  bool IsPlayerRaycast(){
+    var origin = head.position;
+    var direction = (target.head.position - origin).normalized;
+    Ray ray = new Ray(origin, direction);
+
+    RaycastHit hit;
+    if (Physics.Raycast(ray, out hit, float.MaxValue, targetLayerMask, QueryTriggerInteraction.Collide)){
+      // testing hit on target player
+      var layer = hit.transform.gameObject.layer;
+      if (layer == 10) return false;  // hitting wall
+      if (layer == 12) return hit.transform.parent.gameObject == target.gameObject; // hitting damage trigger
+      return hit.transform.gameObject == target.gameObject; // hitting rigidbody ?????
+    }
+    return false;
+  }
+
   public override void Serialize(ExitGames.Client.Photon.Hashtable h) {
     base.Serialize(h);
 
     h.Add('r', transform.rotation);
+    h.Add('t', target ? target.authorityID : -1);
   }
 
   public override void Deserialize(ExitGames.Client.Photon.Hashtable h) {
@@ -85,6 +145,15 @@ public class AIEntity : CharacterEntity {
     if (h.TryGetValue('r', out val)){
       baseRotation = transform.rotation;
       nextRotation = (Quaternion)val;
+    }
+
+    if (h.TryGetValue('t', out val)){
+      var id = (int)val;
+      if (id >= 0){
+        target = UnitManager.Local.GetPlayerEntity(id);
+      } else {
+        target = null;
+      }
     }
   }
 
