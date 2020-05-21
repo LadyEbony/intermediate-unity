@@ -1,13 +1,7 @@
 fileFormatVersion: 2
-<<<<<<< HEAD:Assets/Sprites/flame.mat.meta
-guid: 585a3ba30b2b8e140b78665b21e09862
-NativeFormatImporter:
-=======
 guid: ad7289b77d4e92042b41311f7b960538
 PrefabImporter:
->>>>>>> 7a927483543e6f838bd3d1f3106b3357fbba6b8b:Assets/Prefabs/Poison effect.prefab.meta
   externalObjects: {}
-  mainObjectFileID: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
