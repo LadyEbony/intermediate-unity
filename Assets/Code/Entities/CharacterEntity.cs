@@ -86,7 +86,7 @@ public class CharacterEntity : EntityUnit
             }
             if(counter >= 0.5)
             {
-                ApplyDamage(DamagePerSec, damageType.normal, 0, 0);
+                ApplyDamage(DamagePerSec, damageType.normal);
                 counter = 0;
             }
             counter += Time.deltaTime;
@@ -94,7 +94,7 @@ public class CharacterEntity : EntityUnit
         }
     }
 
-    public void ApplyDamage(int damage, damageType dType, float damageModifier, float debuffTimer)
+    public void ApplyDamage(int damage, damageType dType)
     {
         // do damage to shield first
         // then do damage to health
@@ -112,8 +112,7 @@ public class CharacterEntity : EntityUnit
                 break;
             case damageType.fire:
                 debuff = damageType.fire;
-                DamagePerSec = Mathf.RoundToInt(damage * damageModifier);
-                timer = debuffTimer;
+                DamagePerSec = damage;
                 break;
         }
 
