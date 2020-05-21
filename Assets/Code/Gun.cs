@@ -15,6 +15,7 @@ public class Gun : MonoBehaviour {
     public float fireRate = 1f;
     private float timeToFire = 0f;
     public float angleDeviation = 2f;
+    public int damage = 10;
 
     [Header("Magazine Stats")]
     public int ammoCount = 30;
@@ -83,9 +84,9 @@ public class Gun : MonoBehaviour {
         entity.startingPosition = firePoint.position;
         entity.startingRotation = firePoint.rotation * Quaternion.Euler(GetAngleDeviation, GetAngleDeviation, GetAngleDeviation);
         entity.moveSpeed = bulletSpeed;
-
         entity.timer = bulletAliveTime;
         entity.reflection = bulletReflection;
+        entity.baseDamage = damage;
 
         // Register bullet so it can appear on other people's clients
         UnitManager.Local.Register(entity);

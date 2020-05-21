@@ -31,6 +31,14 @@ public class GameInitializer : MonoBehaviour {
     NetworkManager.onLeave -= OnPlayerLeaved;
   }
 
+  public T Entity<T>(int entity, int authority) where T : EntityUnit{
+    UnitManager manager;
+    if (managers.TryGetValue(authority, out manager)){
+      return manager.Entity<T>(entity);
+    }
+    return null;
+  }
+
   // Start is called before the first frame update
   IEnumerator Start() {
     initialized = false;
