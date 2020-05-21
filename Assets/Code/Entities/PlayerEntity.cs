@@ -145,6 +145,13 @@ public class PlayerEntity : CharacterEntity {
     if (Input.GetKeyDown(KeyCode.LeftShift)){
       alternateAbility?.Use();
     }
+
+    if (Input.GetAxis("Mouse ScrollWheel") > 0f) {
+      gun.pointer = Mathf.Clamp(gun.pointer + 1, 0, gun.ammoType.Length-1);
+    }
+    if (Input.GetAxis("Mouse ScrollWheel") < 0f) {
+      gun.pointer = Mathf.Clamp(gun.pointer - 1, 0, gun.ammoType.Length-1);
+    }
   }
 
   protected override void RemoteUpdate() {

@@ -104,15 +104,16 @@ public class CharacterEntity : EntityUnit
                 if (shield > 0) shield = Mathf.Clamp(shield - damage, 0, shield);
                 else health = Mathf.Clamp(health - damage, 0, maxHealth);
 
-                Debug.Log("Applied" + damage + ", remaining shield: " + shield + ", remaining health: " + health + ", Max Health: " + maxHealth);
+                Debug.Log("Applied" + damage + " of " + dType.ToString() + ", remaining shield: " + shield + ", remaining health: " + health + ", Max Health: " + maxHealth);
                 break;
             case damageType.pure:
                 health = Mathf.Clamp(health - damage, 0, maxHealth);
-                Debug.Log("Applied" + damage + ", remaining shield: " + shield + ", remaining health: " + health + ", Max Health: " + maxHealth);
+                Debug.Log("Applied" + damage + " of " + dType.ToString() + ", remaining shield: " + shield + ", remaining health: " + health + ", Max Health: " + maxHealth);
                 break;
             case damageType.fire:
                 debuff = damageType.fire;
                 DamagePerSec = damage;
+                Debug.Log("Will apply" + damage + " of " + dType.ToString() + ", remaining shield: " + shield + ", remaining health: " + health + ", Max Health: " + maxHealth);
                 break;
         }
 

@@ -16,6 +16,8 @@ public class Gun : MonoBehaviour {
     private float timeToFire = 0f;
     public float angleDeviation = 2f;
     public int damage = 10;
+    public damageType[] ammoType;
+    public int pointer;
 
     [Header("Magazine Stats")]
     public int ammoCount = 30;
@@ -24,7 +26,13 @@ public class Gun : MonoBehaviour {
     private float baseReloadTime, nextReloadTime;
 
     void Start() {
-      if(firePoint == null) {
+        ammoType = new damageType[3];
+        ammoType[0] = damageType.normal;
+        ammoType[1] = damageType.pure;
+        ammoType[2] = damageType.fire;
+      pointer = 0;
+
+      if (firePoint == null) {
         Debug.LogError("Gun: No Fire Point is found");
       }
     }
@@ -87,6 +95,7 @@ public class Gun : MonoBehaviour {
         entity.timer = bulletAliveTime;
         entity.reflection = bulletReflection;
         entity.baseDamage = damage;
+        entity.dType = ammoType[pointer];
 
         // Register bullet so it can appear on other people's clients
         UnitManager.Local.Register(entity);

@@ -38,6 +38,7 @@ public class PlayerUI : MonoBehaviour {
       if (player.gun){
         gunFill.fillAmount = player.gun.GetDisplayRatio;
         gunText.text = player.gun.GetDisplayText;
+        //TODO: Switch the icon for ammo
       }
     }
   }
