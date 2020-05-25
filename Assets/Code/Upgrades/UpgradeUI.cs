@@ -28,16 +28,26 @@ public class UpgradeUI : MonoBehaviour {
   }
 
   private void Update() {
-    if (canvas.enabled && Input.GetKeyDown(key) && upgrade){
-      upgrade.OnActivate();
-      ClearUpgrades();
+    if (canvas.enabled && Input.GetKeyDown(KeyCode.F)) {
+        canvas.enabled = false;
+    } else if (!canvas.enabled && Input.GetKeyDown(KeyCode.F)) {
+        canvas.enabled = true;
+    } else{}
+
+    if (canvas.enabled && Input.GetKeyDown(key) && upgrade) {
+      if(upgrade.remains > 0) {
+         upgrade.OnActivate();
+         ClearUpgrades();
+         upgrade.remains --;
+         description.text = upgrade.description + "\n\nRemaining: " + upgrade.remains.ToString();
+      }
     }
   }
 
   public void SetUpgrade(Upgrade u){
     upgrade = u;
     title.text = u.title;
-    description.text = u.description;
+    description.text = u.description + "\n\nRemaining: " + u.remains.ToString();
 
     keyTextMesh.text = key.ToString();
 

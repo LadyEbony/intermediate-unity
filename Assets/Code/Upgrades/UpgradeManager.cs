@@ -23,15 +23,7 @@ public class UpgradeManager : MonoBehaviour {
     SendUpgrades();
   }
 
-    private void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.F))
-        {
-            SendUpgrades();
-        }
-    }
-
-    public void SendUpgrades(){
+  public void SendUpgrades(){
     var ups = upgrades.OrderBy(u => Random.value).Take(3).ToArray();
     for(var i = 0; i < 3; ++i){
       UpgradeUI.upgrades[i].SetUpgrade(ups[i]);

@@ -337,6 +337,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityID: 0
   authorityID: 0
+  local: 0
   updateTimer: 0.1
   maxHealth: 100
   maxShield: 0
@@ -345,11 +346,16 @@ MonoBehaviour:
   maxSpeed: 11
   acceleration: 88
   head: {fileID: 5308971771192702633}
+  posionEffect: {fileID: 2505785736255057196, guid: ad7289b77d4e92042b41311f7b960538,
+    type: 3}
+  fireEffect: {fileID: 3305274619562335903, guid: 91a538d147e65cf488617b3715a5c6b8,
+    type: 3}
   baseUpdateTime: 0
   basePosition: {x: 0, y: 0, z: 0}
   nextPosition: {x: 0, y: 0, z: 0}
   baseRotation: {x: 0, y: 0, z: 0, w: 0}
   nextRotation: {x: 0, y: 0, z: 0, w: 0}
+  timer: 5
   gun: {fileID: 2570564876849282088}
   mainAbility: {fileID: 0}
   alternateAbility: {fileID: 0}

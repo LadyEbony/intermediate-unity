@@ -18,6 +18,7 @@ public class PlayerUI : MonoBehaviour {
   [Header("Gun")]
   public Image gunFill;
   public TextMeshProUGUI gunText;
+  public TextMeshProUGUI ammoText;
 
   // As you may guess, lateupdate happens after all updates
   private void LateUpdate() {
@@ -38,7 +39,7 @@ public class PlayerUI : MonoBehaviour {
       if (player.gun){
         gunFill.fillAmount = player.gun.GetDisplayRatio;
         gunText.text = player.gun.GetDisplayText;
-        //TODO: Switch the icon for ammo
+        ammoText.text = player.gun.ammoType[player.gun.pointer].ToString();
       }
     }
   }

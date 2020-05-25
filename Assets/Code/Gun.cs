@@ -17,7 +17,7 @@ public class Gun : MonoBehaviour {
     public float angleDeviation = 2f;
     public int damage = 10;
     public damageType[] ammoType;
-    public int pointer;
+    [HideInInspector]public int pointer;
 
     [Header("Magazine Stats")]
     public int ammoCount = 30;

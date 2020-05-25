@@ -17,6 +17,7 @@ public class CharacterEntity : EntityUnit
 
     [Header("Extra")]
     public Transform head;
+    public GameObject posionEffect, fireEffect;
 
     [Header("Network")]
     public float baseUpdateTime;
@@ -32,6 +33,8 @@ public class CharacterEntity : EntityUnit
     private int DamagePerSec;
     public float timer = 5f;
     private float counter = 0f;
+    private bool effectSpawned = false;
+    private Transform currentEffect;
 
     public override void UpdateEntity()
     {
@@ -80,13 +83,22 @@ public class CharacterEntity : EntityUnit
     {
         if(debuff == damageType.fire)
         {
-            if(timer <= 0)
+            if(!effectSpawned)
+            {
+                currentEffect = Instantiate(fireEffect, transform.GetChild(3).transform.position, fireEffect.transform.rotation).transform;
+                currentEffect.parent = transform;
+                effectSpawned = true;
+            }
+
+            if (timer <= 0)
             {
                 debuff = damageType.normal;
+                effectSpawned = false;
+                Destroy(currentEffect.gameObject);
             }
             if(counter >= 0.5)
             {
-                ApplyDamage(DamagePerSec, damageType.normal);
+                ApplyDamage(DamagePerSec, damageType.pure);
                 counter = 0;
             }
             counter += Time.deltaTime;
@@ -112,6 +124,7 @@ public class CharacterEntity : EntityUnit
                 break;
             case damageType.fire:
                 debuff = damageType.fire;
+                timer = 5f;
                 DamagePerSec = damage;
                 Debug.Log("Will apply" + damage + " of " + dType.ToString() + ", remaining shield: " + shield + ", remaining health: " + health + ", Max Health: " + maxHealth);
                 break;
