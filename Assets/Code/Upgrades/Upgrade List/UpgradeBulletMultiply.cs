@@ -8,11 +8,15 @@ public class UpgradeBulletMultiply : Upgrade {
     var player = UnitManager.LocalPlayer;
     if (player){
       player.gun.onBulletFired += OnBulletFiredTWO;
+      player.gun.angleDeviation *= 4f;
     }
   }
 
   private void OnBulletFiredTWO(Gun gun){
-    gun.ammoCount += 1;
+    if (Random.value <= 0.5f)
+      gun.Shoot();
+    else
+      gun.ammoCount += 1;
   }
 
 }

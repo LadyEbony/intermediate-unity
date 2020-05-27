@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UpgradeSpeed : Upgrade {
+public class UpgradeFireBullets : Upgrade {
 
   public override void OnActivate() {
     var player = UnitManager.LocalPlayer;
     if (player){
-      player.maxSpeed *= 1.5f;
+      player.gun.fireAmmoModifer = 200;
+      player.gun.poisonAmmoModifer = 75;
     }
   }
 

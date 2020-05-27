@@ -39,7 +39,9 @@ public class UpgradeUI : MonoBehaviour {
          upgrade.OnActivate();
          ClearUpgrades();
          upgrade.remains --;
-         description.text = upgrade.description + "\n\nRemaining: " + upgrade.remains.ToString();
+
+         // todo: add back later when we do more upgrades
+         // description.text = upgrade.description + "\n\nRemaining: " + upgrade.remains.ToString();
       }
     }
   }

@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UpgradeSpeed : Upgrade {
+public class UpgradeShield : Upgrade {
 
   public override void OnActivate() {
     var player = UnitManager.LocalPlayer;
     if (player){
-      player.maxSpeed *= 1.5f;
+      player.maxShield *= 2;
+      player.shield = player.maxShield;
+      player.shieldRegenTimer *= 0.5f;
     }
   }
 

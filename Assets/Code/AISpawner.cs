@@ -17,6 +17,10 @@ public class AISpawner : MonoBehaviour {
   public LayerMask layerMask;
 
   private void Update() {
+    if (GameInitializer.Instance.initialized && nextTimer == 0f){
+      nextTimer = Time.time + Random.Range(randomStartTimer, randomEndTimer) * 0.5f;
+    }
+
     if (NetworkManager.isMaster && GameInitializer.Instance.initialized && Time.time >= nextTimer){
       
       if (Physics.CheckSphere(transform.position, radius, layerMask)) {
