@@ -98,7 +98,7 @@ public class Gun : MonoBehaviour {
       if (Input.GetKeyDown(KeyCode.R)){
         ammoCount = 0;
         baseReloadTime = Time.time;
-        nextReloadTime = baseReloadTime + nextReloadTime;
+        nextReloadTime = baseReloadTime + reloadTime;
       }
 
       // NEW: Reload gun
@@ -144,7 +144,7 @@ public class Gun : MonoBehaviour {
         transform.rotation = Quaternion.LookRotation(ray.direction, Vector3.up);
     }
 
-    void Shoot()
+    public void Shoot()
     {
         // Create bullet
         // This looks overcomplicated. But this is exactly how UnitManager does it
