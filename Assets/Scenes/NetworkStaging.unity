@@ -1317,7 +1317,7 @@ MonoBehaviour:
   title: {fileID: 1946661555}
   description: {fileID: 914934024}
   keyTextMesh: {fileID: 1067714874}
-  key: 50
+  key: 120
 --- !u!1 &313267015
 GameObject:
   m_ObjectHideFlags: 0
@@ -2495,8 +2495,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   title: Danger
-  description: After reloading, you deal 25 fire and poison damage to everyone around
-    you
+  description: After reloading, you deal 50 pure damage to all enemies around you
   remains: 1
   explosionLayerMask:
     serializedVersion: 2
@@ -5876,7 +5875,7 @@ MonoBehaviour:
   title: {fileID: 1211452144}
   description: {fileID: 524544125}
   keyTextMesh: {fileID: 1640538591}
-  key: 49
+  key: 122
 --- !u!114 &1584336263
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7168,7 +7167,7 @@ MonoBehaviour:
   title: {fileID: 2116265920}
   description: {fileID: 1234590563}
   keyTextMesh: {fileID: 547561236}
-  key: 51
+  key: 99
 --- !u!1 &1946661553
 GameObject:
   m_ObjectHideFlags: 0

@@ -23,8 +23,7 @@ public class UpgradeReload : Upgrade {
             var entity = c.transform.GetComponentInParent<CharacterEntity>();
             if (entity && !(entity is PlayerEntity))
             {
-                UnitManager.Local.RaiseEvent('d', true, entity.entityID, (byte)25, (byte)DamageType.Fire);
-                UnitManager.Local.RaiseEvent('d', true, entity.entityID, (byte)25, (byte)DamageType.Poison);
+                UnitManager.Local.RaiseEvent('d', true, entity.entityID, (byte)50, (byte)DamageType.Pure);
             }
         }
     }
