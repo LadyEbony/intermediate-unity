@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class UpgradeReload : Upgrade {
+  
+  public LayerMask explosionLayerMask;
+
     public override void OnActivate()
     {
         var player = UnitManager.LocalPlayer;
@@ -14,13 +17,14 @@ public class UpgradeReload : Upgrade {
 
     private void OnGunReloadedTWO(Gun gun)
     {
-        var hitColliders = Physics.OverlapSphere(gun.transform.position, 50f, LayerMask.NameToLayer("Character"), QueryTriggerInteraction.Collide);
+        var hitColliders = Physics.OverlapSphere(gun.transform.position, 12f, explosionLayerMask, QueryTriggerInteraction.Collide);
         foreach (var c in hitColliders)
         {
             var entity = c.transform.GetComponentInParent<CharacterEntity>();
-            if (entity)
+            if (entity && !(entity is PlayerEntity))
             {
-                UnitManager.Local.RaiseEvent('d', true, entity.entityID, (byte)100, (byte)DamageType.Fire);
+                UnitManager.Local.RaiseEvent('d', true, entity.entityID, (byte)25, (byte)DamageType.Fire);
+                UnitManager.Local.RaiseEvent('d', true, entity.entityID, (byte)25, (byte)DamageType.Poison);
             }
         }
     }

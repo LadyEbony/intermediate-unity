@@ -215,13 +215,11 @@ public class UnitManager : EntityBase, IMasterOwnsUnclaimed {
   
 
   [NetEvent('d')]
-  public void ApplyDamageEvent(int target, byte damage,  byte dType, byte timer){
+  public void ApplyDamageEvent(int target, byte damage,  byte dType){
     var e = Entity<CharacterEntity>(target);
     var dT = (DamageType)dType;
-    var Timer = (int)timer;
-    if (e){
-      e.ApplyDamage(damage, dT, Timer);
-    }
+    if (e)
+      e.ApplyDamage(damage, dT);
   }
 
   [NetEvent('b')]

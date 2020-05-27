@@ -159,7 +159,6 @@ public class Gun : MonoBehaviour {
         entity.reflection = bulletReflection;
         entity.baseDamage = GetDamage;
         entity.damageType = currentAmmoType;
-        entity.effectTimer = effectTimer;
 
         // Register bullet so it can appear on other people's clients
         UnitManager.Local.Register(entity);

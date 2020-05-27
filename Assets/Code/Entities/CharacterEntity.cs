@@ -118,12 +118,12 @@ public class CharacterEntity : EntityUnit
 
           if (isMine){
             var damage = fireDebuff / fireCounter;
-            ApplyDamage(damage, DamageType.Normal, 0);
+            ApplyDamage(damage, DamageType.Normal);
             fireDebuff -= damage;
           }
 
           fireCounter -= 1;
-          fireTimer = Time.time + 1f;
+          fireTimer = Time.time + 0.5f;
         }
 
         if (fireCounter == 0){
@@ -139,12 +139,12 @@ public class CharacterEntity : EntityUnit
         if (Time.time >= poisonTimer){
           if (isMine){
             var damage = poisonDebuff / poisonCounter;
-            ApplyDamage(damage, DamageType.Normal, 0);
+            ApplyDamage(damage, DamageType.Normal);
             poisonDebuff -= damage;
           }
 
           poisonCounter -= 1;
-          poisonTimer = Time.time + 1f;
+          poisonTimer = Time.time + 0.5f;
         }
 
         if (poisonCounter == 0){
@@ -181,7 +181,7 @@ public class CharacterEntity : EntityUnit
         */
     }
 
-    public void ApplyDamage(int damage, DamageType dType, int effectTimer) {
+    public void ApplyDamage(int damage, DamageType dType) {
       // do damage to shield first
       // then do damage to health
       switch (dType) {
@@ -197,12 +197,12 @@ public class CharacterEntity : EntityUnit
           break;
         case DamageType.Fire:
           fireDebuff += damage;
-          fireCounter = effectTimer;
+          fireCounter = 6;
           //Debug.Log("Will apply" + damage + " of " + dType.ToString() + ", remaining shield: " + shield + ", remaining health: " + health + ", Max Health: " + maxHealth);
           break;
       case DamageType.Poison:
         poisonDebuff += damage;
-        poisonCounter = effectTimer;
+        poisonCounter = 6;
         break;
       }
 
