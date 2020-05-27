@@ -13,10 +13,10 @@ public class AbilityGrenade : Ability
         var newGrenade = Explosion.CreateEntity() as Explosion;
         
         // Insert data into explosion
-        newGrenade.transform.position = transform.position;
+        var parent = GetComponentInParent<PlayerEntity>().gun.firePoint;
 
-        var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        newGrenade.rb.velocity = new Vector3(ray.direction.x * speed, ray.direction.y * speed, ray.direction.z * speed);
+        newGrenade.transform.position = parent.position;
+        newGrenade.rb.velocity = parent.rotation * Vector3.forward * speed;
 
         // Register explosion so it can appear on other people's clients
         UnitManager.Local.Register(newGrenade);

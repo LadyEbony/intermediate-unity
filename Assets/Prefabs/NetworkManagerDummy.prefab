@@ -251,11 +251,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serverAddress: 
-  appID: 7c0120c9-54c3-4025-b11f-b7b153d681ed
+  appID: 222a4068-aa64-456c-ba24-5becbde0b116
   gameVersion: 0.1
   NetworkDebugParticles: {fileID: 0}
   expectedOnline: 1
-  expectedMaxPlayers: 2
+  expectedMaxPlayers: 4
 --- !u!114 &281431717588867266
 MonoBehaviour:
   m_ObjectHideFlags: 0
