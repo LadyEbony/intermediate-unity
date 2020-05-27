@@ -12,7 +12,9 @@ public class UpgradeBulletMultiply : Upgrade {
   }
 
   private void OnBulletFiredTWO(Gun gun){
-    gun.ammoCount += 1;
+    int chance = Random.Range(0,100);
+    if(chance <= 25) {
+       gun.Shoot();
+    }
   }
-
 }

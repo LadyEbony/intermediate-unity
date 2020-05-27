@@ -19,6 +19,7 @@ public class Gun : MonoBehaviour {
     public int damage = 10;
     public DamageType[] ammoType;
     [HideInInspector] public int ammoTypePointer;
+    public int effectTimer;
     public DamageType currentAmmoType => ammoType[ammoTypePointer];
 
     // I'm using bytes cause adding floats never works well
@@ -158,6 +159,7 @@ public class Gun : MonoBehaviour {
         entity.reflection = bulletReflection;
         entity.baseDamage = GetDamage;
         entity.damageType = currentAmmoType;
+        entity.effectTimer = effectTimer;
 
         // Register bullet so it can appear on other people's clients
         UnitManager.Local.Register(entity);

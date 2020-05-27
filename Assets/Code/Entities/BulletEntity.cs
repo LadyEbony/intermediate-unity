@@ -17,6 +17,7 @@ public class BulletEntity : EntityUnit {
   public int reflection;
 
   private float destroyTimer;
+  public int effectTimer;
 
   // public float damageModifier = 0.1f; //percentage of bullet damage applied to the special damage type, ex. fire.
 
@@ -158,7 +159,7 @@ public class BulletEntity : EntityUnit {
       
       // NEW: damage is calculated beforehand by the damage type
       // NEW: damage modifiers moved to gun
-      UnitManager.Local.RaiseEvent('d', true, entity.entityID, (byte)baseDamage, (byte)damageType);
+      UnitManager.Local.RaiseEvent('d', true, entity.entityID, (byte)baseDamage, (byte)damageType, (byte)effectTimer);
 
 
       //UnitManager.Local.RaiseEvent('b', true, entityID, authorityID);
