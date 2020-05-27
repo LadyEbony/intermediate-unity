@@ -340,7 +340,7 @@ MonoBehaviour:
   local: 0
   updateTimer: 0.1
   maxHealth: 100
-  maxShield: 0
+  maxShield: 50
   health: 100
   shield: 50
   maxSpeed: 11
@@ -360,10 +360,11 @@ MonoBehaviour:
   fireTimer: 0
   fireSpawnedEffect: {fileID: 0}
   poisonDebuff: 0
-  poisonTimer: 0
   poisonCounter: 0
+  poisonTimer: 0
   poisonSpawnedEffect: {fileID: 0}
-  timer: 5
+  shieldRegenTimer: 5
+  nextShieldRegenTimer: 0
   gun: {fileID: 2570564876849282088}
   mainAbility: {fileID: 0}
   alternateAbility: {fileID: 0}

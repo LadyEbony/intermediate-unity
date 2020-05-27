@@ -61,4 +61,9 @@ public abstract class Projectile : EntityUnit {
   }
   
   public abstract void Explode();
+
+  public override void DestroyEntity() {
+    base.DestroyEntity();
+    Explode();
+  }
 }

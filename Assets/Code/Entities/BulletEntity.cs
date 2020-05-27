@@ -159,6 +159,8 @@ public class BulletEntity : EntityUnit {
       // NEW: damage is calculated beforehand by the damage type
       // NEW: damage modifiers moved to gun
       UnitManager.Local.RaiseEvent('d', true, entity.entityID, (byte)baseDamage, (byte)damageType);
+
+
       UnitManager.Local.RaiseEvent('b', true, entityID, authorityID);
     }
 

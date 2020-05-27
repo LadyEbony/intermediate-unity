@@ -6,6 +6,10 @@ public class PlayerEntity : CharacterEntity {
 
     private Rigidbody rb;
 
+    [Header("Shield Regen")]
+    public float shieldRegenTimer = 5f;
+    public float nextShieldRegenTimer;
+
     [Header("Abilities")]
     public Gun gun;
     public Ability mainAbility;
@@ -163,6 +167,12 @@ public class PlayerEntity : CharacterEntity {
       gun.pointer = Mathf.Clamp(gun.pointer - 1, 0, gun.ammoType.Length-1);
     }
     */
+
+    // shield regen
+    if (Time.time >= nextShieldRegenTimer){
+      shield = maxShield;
+      nextShieldRegenTimer = float.MaxValue;
+    }
   }
 
   protected override void RemoteUpdate() {
@@ -211,6 +221,11 @@ public class PlayerEntity : CharacterEntity {
 
       return delta;
     }
+  }
+
+  public override void OnDamageTaken() {
+    base.OnDamageTaken();
+    nextShieldRegenTimer = Time.time + shieldRegenTimer;
   }
 
   // Only called on the local client

@@ -125,12 +125,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityID: 0
   authorityID: 0
+  local: 0
   updateTimer: 0.1
   rb: {fileID: 0}
   detonationTime: 1
-  explosionRadius: 2
+  explosionRadius: 8
   explosionLayer:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 4096
   explostionEffect: {fileID: 5847697424723397431, guid: 5cade46b7b4cae24a93268658affcbc8,
     type: 3}

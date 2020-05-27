@@ -9,20 +9,28 @@ public class Explosion : Projectile {
   public  float     explosionRadius;
   public  LayerMask explosionLayer;
   public GameObject explostionEffect;
-  
+  private bool exploded;
+
   public new static EntityUnit CreateEntity(){
     return SetEntityHelper(GameInitializer.Instance.grenadePrefab);
   }
 
   public override void Explode() {
-    //destroy everything in the radius and destroy this object
-    Collider[] hitColliders = Physics.OverlapSphere(transform.position, explosionRadius, explosionLayer);
-    for (int i = 0; i < hitColliders.Length; ++i) {
-        Destroy(hitColliders[i].gameObject);
+
+    if (exploded){
+      return;
     }
 
-    // Deregister explosion so it can STOP appearing on other people's clients
     if (isMine){
+      //destroy everything in the radius and destroy this object
+      var hitColliders = Physics.OverlapSphere(transform.position, explosionRadius, explosionLayer, QueryTriggerInteraction.Collide);
+      foreach(var c in hitColliders){
+        var entity = c.transform.GetComponentInParent<CharacterEntity>();
+        if (entity){
+          UnitManager.Local.RaiseEvent('d', true, entity.entityID, (byte)100, (byte)DamageType.Fire);
+        }
+      }
+
       UnitManager.Local.Deregister(this);
       Destroy(gameObject);
     }
@@ -30,6 +38,13 @@ public class Explosion : Projectile {
     // particles
     var eft = Instantiate(explostionEffect, transform.position, Quaternion.identity);
     Destroy(eft, 2f);
+
+    exploded = true;
+  }
+
+  private void OnDrawGizmos() {
+    Gizmos.color = Color.red;
+    Gizmos.DrawWireSphere(transform.position, explosionRadius);
   }
 
 }

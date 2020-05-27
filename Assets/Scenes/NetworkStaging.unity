@@ -919,7 +919,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f90fe507005110468f89dbd109ee89f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timer: 10
+  randomStartTimer: 20
+  randomEndTimer: 40
   radius: 8
   layerMask:
     serializedVersion: 2
@@ -1077,7 +1078,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f90fe507005110468f89dbd109ee89f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timer: 10
+  randomStartTimer: 20
+  randomEndTimer: 40
   radius: 8
   layerMask:
     serializedVersion: 2
@@ -4040,7 +4042,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f90fe507005110468f89dbd109ee89f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timer: 10
+  randomStartTimer: 20
+  randomEndTimer: 40
   radius: 8
   layerMask:
     serializedVersion: 2
@@ -4921,7 +4924,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f90fe507005110468f89dbd109ee89f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timer: 10
+  randomStartTimer: 20
+  randomEndTimer: 40
   radius: 8
   layerMask:
     serializedVersion: 2
@@ -6477,7 +6481,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f90fe507005110468f89dbd109ee89f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timer: 10
+  randomStartTimer: 20
+  randomEndTimer: 40
   radius: 8
   layerMask:
     serializedVersion: 2
@@ -6815,7 +6820,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f90fe507005110468f89dbd109ee89f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timer: 10
+  randomStartTimer: 20
+  randomEndTimer: 40
   radius: 8
   layerMask:
     serializedVersion: 2

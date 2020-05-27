@@ -205,5 +205,11 @@ public class CharacterEntity : EntityUnit
         poisonCounter = 5;
         break;
       }
+
+      OnDamageTaken();
+    }
+
+    public virtual void OnDamageTaken(){
+      
     }
 }
