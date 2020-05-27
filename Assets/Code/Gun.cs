@@ -27,6 +27,9 @@ public class Gun : MonoBehaviour {
     public byte fireAmmoModifer = 120;
     public byte poisonAmmoModifer = 50;
 
+    public event System.Action<Gun> onBulletFired;
+    public event System.Action<Gun> onGunReloaded;
+
     public int GetDamage{
       get {
         switch(currentAmmoType){
@@ -81,8 +84,6 @@ public class Gun : MonoBehaviour {
 
   void Start() {
 
-      
-
       if (firePoint == null) {
         Debug.LogError("Gun: No Fire Point is found");
       }
@@ -94,13 +95,23 @@ public class Gun : MonoBehaviour {
     public void HandleGun(){
       //HandleMouse();
 
+      if (Input.GetKeyDown(KeyCode.R)){
+        ammoCount = 0;
+        baseReloadTime = Time.time;
+        nextReloadTime = baseReloadTime + nextReloadTime;
+      }
+
       // NEW: Reload gun
       if (ammoCount == 0 && Time.time >= nextReloadTime){
         ammoCount = maxAmmoCount;
+        onGunReloaded?.Invoke(this);
       }
 
       if (ammoCount > 0 && Input.GetMouseButton(0) && Time.time >= timeToFire) {
         Shoot();
+
+        onBulletFired?.Invoke(this);
+
         timeToFire = Time.time + 1 / fireRate;
         ammoCount -= 1;
 
