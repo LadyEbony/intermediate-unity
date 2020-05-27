@@ -18,7 +18,17 @@ public class PlayerUI : MonoBehaviour {
   [Header("Gun")]
   public Image gunFill;
   public TextMeshProUGUI gunText;
-  public TextMeshProUGUI ammoText;
+  public TextMeshProUGUI gunTextDescription;
+
+  // Bad way of doing this
+  // don't do this
+  // DamageType.Normal.ToString() is fine. I just wanted to extra fancy for whatever reason
+  public Dictionary<DamageType, (string ammo, string description)> ammoTextD = new Dictionary<DamageType, (string ammo, string description)>(){
+    { DamageType.Normal, ("Normal", "Deal normal damage") },
+    { DamageType.Pure, ("Pure", "Ignores shields") },
+    { DamageType.Fire, ("Fire", "Damage is dealt over time") },
+    { DamageType.Poison, ("Poison", "Enemy is slowed by 25%" ) }
+  };
 
   // As you may guess, lateupdate happens after all updates
   private void LateUpdate() {
@@ -36,10 +46,15 @@ public class PlayerUI : MonoBehaviour {
       if (player.alternateAbility)
         abilityCooldown2.fillAmount = player.alternateAbility.GetCooldownRatio;
 
-      if (player.gun){
-        gunFill.fillAmount = player.gun.GetDisplayRatio;
-        gunText.text = player.gun.GetDisplayText;
-        ammoText.text = player.gun.ammoType[player.gun.pointer].ToString();
+      var gun = player.gun;
+      if (gun){
+        gunFill.fillAmount = gun.GetDisplayRatio;
+        gunText.text = gun.GetDisplayText;
+
+        var d = ammoTextD[gun.currentAmmoType];
+        gunTextDescription.text = string.Format("Damage: {0}\nFirerate: {1} rpm\nAmmo Type: {2} ({3})", 
+          gun.GetDamage, (int)(gun.fireRate * 60f), d.ammo, d.description);
+        //ammoText.text = player.gun.ammoType[player.gun.pointer].ToString();
       }
     }
   }

@@ -207,11 +207,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   firePoint: {fileID: 2570564877361581980}
-  bulletSpeed: 20
+  bulletSpeed: 60
   bulletAliveTime: 1
   bulletPenetration: 0
   bulletReflection: 2
-  fireRate: 60
+  fireRate: 10
+  angleDeviation: 2
+  damage: 10
+  ammoType: 
+  ammoTypePointer: 0
+  pureAmmoModifer: 50
+  fireAmmoModifer: 120
+  poisonAmmoModifer: 50
+  ammoCount: 30
+  maxAmmoCount: 30
+  reloadTime: 1
 --- !u!114 &2570564877065612289
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -224,6 +234,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e20cfbf839f6272448336f909b29f362, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cooldown: 4
   grenade: {fileID: 248332740965947261, guid: e5ec8eb38de600f4f89b20c9605a8fea, type: 3}
   speed: 100
 --- !u!1 &2570564877357710746

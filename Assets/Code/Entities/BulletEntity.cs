@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public enum damageType : byte { normal, pure, fire }
+public enum DamageType : byte { Normal, Pure, Fire, Poison }
 
 public class BulletEntity : EntityUnit {
 
@@ -13,12 +13,12 @@ public class BulletEntity : EntityUnit {
 
   [Header("Network Data (Combat)")]
   public int baseDamage;
-  public int reflection, penetration;
+  public DamageType damageType;
+  public int reflection;
 
   private float destroyTimer;
 
-  public damageType dType = damageType.normal;
-  public float damageModifier = 0.1f; //percentage of bullet damage applied to the special damage type, ex. fire.
+  // public float damageModifier = 0.1f; //percentage of bullet damage applied to the special damage type, ex. fire.
 
   [HideInInspector] public Rigidbody rb;
 
@@ -71,6 +71,7 @@ public class BulletEntity : EntityUnit {
     h.Add('t', timer);
 
     h.Add('d', (byte)baseDamage);
+    h.Add('b', (byte)damageType);
     h.Add('e', (byte)reflection);
   }
 
@@ -105,6 +106,10 @@ public class BulletEntity : EntityUnit {
 
     if (h.TryGetValue('d', out val)){
       baseDamage = (byte)val;
+    }
+
+    if (h.TryGetValue('b', out val)){
+      damageType = (DamageType)(byte)val;
     }
 
     if (h.TryGetValue('e', out val)){
@@ -150,7 +155,10 @@ public class BulletEntity : EntityUnit {
       // bullets can only hurt things you own
       // meaning only yourself
       // and the host can only hurt ai
-      UnitManager.Local.RaiseEvent('d', true, entity.entityID, (byte)(Mathf.RoundToInt(baseDamage * damageModifier)), (byte)dType);
+      
+      // NEW: damage is calculated beforehand by the damage type
+      // NEW: damage modifiers moved to gun
+      UnitManager.Local.RaiseEvent('d', true, entity.entityID, (byte)baseDamage, (byte)damageType);
       UnitManager.Local.RaiseEvent('b', true, entityID, authorityID);
     }
 

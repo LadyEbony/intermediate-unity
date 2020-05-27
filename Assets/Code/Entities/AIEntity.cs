@@ -16,8 +16,6 @@ public class AIEntity : CharacterEntity {
   private float nextSearchTimer;
 
   public float targetingSpeedModifier = 0.125f;
-  private float baseSpeed;
-  private float slowSpeed;
 
   [Header("Bullet")]
   public Transform barrelTransform;
@@ -44,8 +42,6 @@ public class AIEntity : CharacterEntity {
     base.StartEntity();
 
     ai.Warp(nextPosition);
-    baseSpeed = ai.speed;
-    slowSpeed = ai.speed * targetingSpeedModifier;
 
     if (isMine){
       
@@ -74,6 +70,9 @@ public class AIEntity : CharacterEntity {
 
       timeToFire = Time.time + 1f / bulletFirerate;
     }
+
+    if (health <= 0)
+      DestroyAI();
   }
 
   protected override void LocalUpdate() {
@@ -93,7 +92,9 @@ public class AIEntity : CharacterEntity {
       ai.destination = target.transform.position;
 
       // slow down if player in sight
-      ai.speed = IsPlayerRaycast() ? slowSpeed : baseSpeed;
+      var speed = GetCurrentSpeed;
+      if (IsPlayerRaycast()) speed *= targetingSpeedModifier;
+      ai.speed = speed;
     }
 
   }
@@ -151,6 +152,23 @@ public class AIEntity : CharacterEntity {
       } else {
         target = null;
       }
+    }
+  }
+
+    /// <summary>
+  /// Destroys ai if you own it. Otherwise disables it.
+  /// </summary>
+  public void DestroyAI() {
+    if (isMine){
+      // Deregister ai so it can STOP appearing on other people's clients
+      UnitManager.Local.Deregister(this);
+
+      // Then we destroy it normally
+      DestroyEntity();
+      Destroy(gameObject);
+    } else {
+      DestroyEntity();
+      gameObject.SetActive(false);
     }
   }
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Gun : MonoBehaviour {
@@ -16,8 +17,47 @@ public class Gun : MonoBehaviour {
     private float timeToFire = 0f;
     public float angleDeviation = 2f;
     public int damage = 10;
-    public damageType[] ammoType;
-    [HideInInspector]public int pointer;
+    public DamageType[] ammoType;
+    [HideInInspector] public int ammoTypePointer;
+    public DamageType currentAmmoType => ammoType[ammoTypePointer];
+
+    // I'm using bytes cause adding floats never works well
+    [Header("Gun Ammo Stats")]
+    public byte pureAmmoModifer = 50;
+    public byte fireAmmoModifer = 120;
+    public byte poisonAmmoModifer = 50;
+
+    public int GetDamage{
+      get {
+        switch(currentAmmoType){
+          case DamageType.Normal:
+            return damage;
+          case DamageType.Pure:
+            return (int)(damage * (pureAmmoModifer / 100f));
+          case DamageType.Fire:
+            return (int)(damage * (fireAmmoModifer / 100f));
+          case DamageType.Poison:
+            return (int)(damage * (poisonAmmoModifer / 100f));
+        }
+        return damage;
+      }
+    }
+
+    public byte GetAmmoModifer{
+      get {
+        switch(currentAmmoType){
+          case DamageType.Normal:
+            return 100;
+          case DamageType.Pure:
+            return pureAmmoModifer;
+          case DamageType.Fire:
+            return fireAmmoModifer;
+          case DamageType.Poison:
+            return poisonAmmoModifer;
+        }
+        return 100;
+      }
+    }
 
     [Header("Magazine Stats")]
     public int ammoCount = 30;
@@ -25,12 +65,23 @@ public class Gun : MonoBehaviour {
     public float reloadTime = 1f;
     private float baseReloadTime, nextReloadTime;
 
-    void Start() {
-        ammoType = new damageType[3];
-        ammoType[0] = damageType.normal;
-        ammoType[1] = damageType.pure;
-        ammoType[2] = damageType.fire;
-      pointer = 0;
+  private void Awake() {
+    // moved to Awake because the array needs to be created
+    // when the script is created
+    // not on the first Update() call
+
+    // lazy way (but automated) to get all enums
+    ammoType = System.Enum.GetValues(typeof(DamageType)).Cast<DamageType>().ToArray();
+    //  ammoType = new DamageType[3];
+    //  ammoType[0] = DamageType.Normal;
+    //  ammoType[1] = DamageType.Pure;
+    //  ammoType[2] = DamageType.Fire;
+    ammoTypePointer = 0;
+  }
+
+  void Start() {
+
+      
 
       if (firePoint == null) {
         Debug.LogError("Gun: No Fire Point is found");
@@ -94,8 +145,8 @@ public class Gun : MonoBehaviour {
         entity.moveSpeed = bulletSpeed;
         entity.timer = bulletAliveTime;
         entity.reflection = bulletReflection;
-        entity.baseDamage = damage;
-        entity.dType = ammoType[pointer];
+        entity.baseDamage = GetDamage;
+        entity.damageType = currentAmmoType;
 
         // Register bullet so it can appear on other people's clients
         UnitManager.Local.Register(entity);

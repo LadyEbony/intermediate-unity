@@ -355,6 +355,14 @@ MonoBehaviour:
   nextPosition: {x: 0, y: 0, z: 0}
   baseRotation: {x: 0, y: 0, z: 0, w: 0}
   nextRotation: {x: 0, y: 0, z: 0, w: 0}
+  fireDebuff: 0
+  fireCounter: 0
+  fireTimer: 0
+  fireSpawnedEffect: {fileID: 0}
+  poisonDebuff: 0
+  poisonTimer: 0
+  poisonCounter: 0
+  poisonSpawnedEffect: {fileID: 0}
   timer: 5
   gun: {fileID: 2570564876849282088}
   mainAbility: {fileID: 0}

@@ -207,9 +207,9 @@ MonoBehaviour:
   authorityID: 0
   local: 0
   updateTimer: 0.1
-  maxHealth: 50
+  maxHealth: 75
   maxShield: 50
-  health: 50
+  health: 75
   shield: 50
   maxSpeed: 11
   acceleration: 88
@@ -223,7 +223,14 @@ MonoBehaviour:
   nextPosition: {x: 0, y: 0, z: 0}
   baseRotation: {x: 0, y: 0, z: 0, w: 0}
   nextRotation: {x: 0, y: 0, z: 0, w: 0}
-  timer: 5
+  fireDebuff: 0
+  fireCounter: 0
+  fireTimer: 0
+  fireSpawnedEffect: {fileID: 0}
+  poisonDebuff: 0
+  poisonCounter: 0
+  poisonTimer: 0
+  poisonSpawnedEffect: {fileID: 0}
   target: {fileID: 0}
   targetLayerMask:
     serializedVersion: 2
@@ -232,9 +239,9 @@ MonoBehaviour:
   targetingSpeedModifier: 0.125
   barrelTransform: {fileID: 4950297041453474373}
   bulletDamage: 5
-  bulletFirerate: 4
-  bulletSpeed: 20
-  bulletAliveTime: 2
+  bulletFirerate: 1
+  bulletSpeed: 10
+  bulletAliveTime: 4
 --- !u!195 &6362492093768295010
 NavMeshAgent:
   m_ObjectHideFlags: 0

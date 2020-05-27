@@ -120,8 +120,8 @@ public class PlayerEntity : CharacterEntity {
 
     // NEW: Velocity is always approaching the max speed
     // NEW: Even if somehow the velocity went overboard, it will fix itself
-    velocity.x = Mathf.MoveTowards(velocity.x, delta.x * maxSpeed, acceleration * Time.deltaTime);
-    velocity.z = Mathf.MoveTowards(velocity.z, delta.z * maxSpeed, acceleration * Time.deltaTime);
+    velocity.x = Mathf.MoveTowards(velocity.x, delta.x * GetCurrentSpeed, acceleration * Time.deltaTime);
+    velocity.z = Mathf.MoveTowards(velocity.z, delta.z * GetCurrentSpeed, acceleration * Time.deltaTime);
 
     // ground
     if (Input.GetButtonDown("Jump") && OnGround){
@@ -146,12 +146,23 @@ public class PlayerEntity : CharacterEntity {
       alternateAbility?.Use();
     }
 
+    // NEW: Just condensed it into one line so reduce likelihood of errors in random places
+    // NEW: I added an extra that will modify the scroll wheel to go loop back around
+    var sw = Input.GetAxisRaw("Mouse ScrollWheel");
+    if (Input.GetAxisRaw("Mouse ScrollWheel") != 0){
+      var direction = (int)Mathf.Sign(sw);
+      gun.ammoTypePointer = Mathf.Clamp(gun.ammoTypePointer + direction, 0, gun.ammoType.Length - 1);
+      // gun.ammoTypePointer = (gun.ammoTypePointer + direction) % gun.ammoType.Length;
+    }
+
+    /*
     if (Input.GetAxis("Mouse ScrollWheel") > 0f) {
       gun.pointer = Mathf.Clamp(gun.pointer + 1, 0, gun.ammoType.Length-1);
     }
     if (Input.GetAxis("Mouse ScrollWheel") < 0f) {
       gun.pointer = Mathf.Clamp(gun.pointer - 1, 0, gun.ammoType.Length-1);
     }
+    */
   }
 
   protected override void RemoteUpdate() {

@@ -14,7 +14,6 @@ public class UnitManager : EntityBase, IMasterOwnsUnclaimed {
   public Dictionary<int, EntityUnit> entities;
   public Dictionary<int, EntityUnit> entitiesLocal;
   private Dictionary<int, PlayerEntity> players;
-  private Dictionary<int, AIEntity> enemies;
 
   public GameObject platePrefab;
 
@@ -218,7 +217,7 @@ public class UnitManager : EntityBase, IMasterOwnsUnclaimed {
   [NetEvent('d')]
   public void ApplyDamageEvent(int target, byte damage,  byte dType){
     var e = Entity<CharacterEntity>(target);
-    var dT = (damageType)dType;
+    var dT = (DamageType)dType;
     if (e){
       e.ApplyDamage(damage, dT);
     }
