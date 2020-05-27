@@ -161,7 +161,7 @@ public class BulletEntity : EntityUnit {
       UnitManager.Local.RaiseEvent('d', true, entity.entityID, (byte)baseDamage, (byte)damageType);
 
 
-      UnitManager.Local.RaiseEvent('b', true, entityID, authorityID);
+      //UnitManager.Local.RaiseEvent('b', true, entityID, authorityID);
     }
 
   }
